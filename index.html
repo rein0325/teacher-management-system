@@ -162,7 +162,7 @@ App.api.call = function(action, payload = {}) {
   return new Promise((resolve, reject) => {
     // 產生唯一的 callback 函式名稱，避免多個請求衝突
     const callbackName = 'cb_' + Date.now();
-    
+
     // 把 callback 函式掛到 window 上，讓 script 載入後可以呼叫
     window[callbackName] = function(data) {
       resolve(data);
