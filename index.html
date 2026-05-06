@@ -3,57 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>講師管理系統</title>
+  <!-- 版本號：強制瀏覽器載入新版 -->
+  <title>講師管理系統 v2</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
-
-    /* 導覽列 */
     nav { background: #1a73e8; padding: 0 24px; display: flex; align-items: center; height: 56px; }
     nav h1 { color: #fff; font-size: 18px; margin-right: 32px; }
     nav button { background: transparent; color: rgba(255,255,255,0.8); border: none; padding: 8px 16px; cursor: pointer; font-size: 14px; border-radius: 4px; }
     nav button:hover, nav button.active { background: rgba(255,255,255,0.2); color: #fff; }
-
-    /* 主內容 */
     main { max-width: 900px; margin: 24px auto; padding: 0 16px; }
-
-    /* 頁面區塊 */
     .page { display: none; }
     .page.active { display: block; }
-
-    /* 卡片 */
     .card { background: #fff; border-radius: 8px; padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .card h2 { font-size: 16px; color: #555; margin-bottom: 16px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
-
-    /* 表單 */
     .form-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-    input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; flex: 1; min-width: 150px; }
+    input, select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; flex: 1; min-width: 150px; }
     input:focus { outline: none; border-color: #1a73e8; }
-
-    /* 按鈕 */
     .btn { padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
     .btn-primary { background: #1a73e8; color: #fff; }
     .btn-primary:hover { background: #1557b0; }
-    .btn-secondary { background: #f1f3f4; color: #333; }
-    .btn-secondary:hover { background: #e2e5e9; }
-
-    /* 表格 */
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th { background: #f8f9fa; padding: 10px 12px; text-align: left; color: #666; font-weight: 500; border-bottom: 2px solid #eee; }
     td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; }
     tr:hover td { background: #fafafa; }
-
-    /* 狀態標籤 */
     .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
     .badge-active { background: #e6f4ea; color: #137333; }
     .badge-inactive { background: #fce8e6; color: #c5221f; }
-
-    /* 提示訊息 */
     .msg { padding: 10px 14px; border-radius: 4px; margin-top: 12px; font-size: 14px; display: none; }
     .msg-success { background: #e6f4ea; color: #137333; display: block; }
     .msg-error { background: #fce8e6; color: #c5221f; display: block; }
-
-    /* 載入中 */
     .loading { color: #999; font-size: 14px; padding: 16px 0; text-align: center; }
   </style>
 </head>
@@ -61,13 +40,12 @@
 
 <nav>
   <h1>📚 講師管理系統</h1>
-  <button class="active" onclick="App.router.go('teachers')">講師</button>
-  <button onclick="App.router.go('courses')">課程</button>
-  <button onclick="App.router.go('sessions')">開課紀錄</button>
+  <button class="active" onclick="App.router.go('teachers', event)">講師</button>
+  <button onclick="App.router.go('courses', event)">課程</button>
+  <button onclick="App.router.go('sessions', event)">開課紀錄</button>
 </nav>
 
 <main>
-
   <!-- 講師頁面 -->
   <div class="page active" id="page-teachers">
     <div class="card">
@@ -108,7 +86,7 @@
     <div class="card">
       <h2>新增開課紀錄</h2>
       <div class="form-row">
-        <select id="s-type" style="padding:8px 12px;border:1px solid #ddd;border-radius:4px;font-size:14px;flex:1;">
+        <select id="s-type">
           <option value="regular">常態班</option>
           <option value="camp">營隊</option>
         </select>
@@ -128,109 +106,86 @@
       <div id="table-sessions" class="loading">載入中...</div>
     </div>
   </div>
-
 </main>
 
 <script>
+  // Apps Script 網頁應用程式網址
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-BbbcHTd1LgkcdcgBvHosN9OtgxuojIArBj2E9GrVaHsgAm6b22rVcXbBdHZpWlZ_mA/exec';
 
-  const App = {
-    state: {
-      teachers: [],
-      courses: [],
-      sessions: []
-    },
-    api: {},
-    ui: {},
-    router: {}
-  };
+  const App = { state: { teachers: [], courses: [], sessions: [] }, api: {}, ui: {}, router: {} };
 
-  // 路由
-  App.router.go = function(page) {
+  // 路由：切換頁面
+  App.router.go = function(page, e) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     document.getElementById('page-' + page).classList.add('active');
-    event.target.classList.add('active');
+    if (e && e.target) e.target.classList.add('active');
     if (page === 'teachers') App.api.getTeachers();
     if (page === 'courses') App.api.getCourses();
     if (page === 'sessions') App.api.getSessions();
   };
 
-// 共用 JSONP 呼叫函式
-// JSONP 原理：動態插入 <script> 標籤，繞過瀏覽器跨域限制
-App.api.call = function(action, payload = {}) {
-  return new Promise((resolve, reject) => {
-    // 產生唯一的 callback 函式名稱，避免多個請求衝突
-    const callbackName = 'cb_' + Date.now();
+  // 共用 JSONP 呼叫函式
+  // JSONP 原理：動態插入 script 標籤，繞過瀏覽器跨域限制
+  App.api.call = function(action, payload) {
+    payload = payload || {};
+    return new Promise(function(resolve, reject) {
+      // 產生唯一的 callback 名稱
+      var cbName = 'cb' + Date.now() + Math.floor(Math.random() * 1000);
 
-    // 把 callback 函式掛到 window 上，讓 script 載入後可以呼叫
-    window[callbackName] = function(data) {
-      resolve(data);
-      // 清除用完的 callback 函式和 script 標籤
-      delete window[callbackName];
-      document.getElementById(callbackName).remove();
-    };
+      // 把 callback 函式掛到 window 上
+      window[cbName] = function(data) {
+        resolve(data);
+        delete window[cbName];
+        var el = document.getElementById(cbName);
+        if (el) el.remove();
+      };
 
-    // 組合網址
-    const params = encodeURIComponent(JSON.stringify({ action, payload }));
-    const url = SCRIPT_URL + '?data=' + params + '&callback=' + callbackName;
-
-    // 動態插入 <script> 標籤發送請求
-    const script = document.createElement('script');
-    script.id = callbackName;
-    script.src = url;
-    script.onerror = () => {
-      reject(new Error('請求失敗'));
-      delete window[callbackName];
-      script.remove();
-    };
-    document.body.appendChild(script);
-  });
-};
-
-  // 顯示訊息
-  App.ui.showMsg = function(id, text, type) {
-    const el = document.getElementById(id);
-    el.textContent = text;
-    el.className = 'msg msg-' + type;
-    setTimeout(() => { el.className = 'msg'; }, 3000);
+      // 組合網址並插入 script 標籤
+      var params = encodeURIComponent(JSON.stringify({ action: action, payload: payload }));
+      var url = SCRIPT_URL + '?data=' + params + '&callback=' + cbName;
+      var script = document.createElement('script');
+      script.id = cbName;
+      script.src = url;
+      script.onerror = function() {
+        reject(new Error('請求失敗'));
+        delete window[cbName];
+        if (script.parentNode) script.remove();
+      };
+      document.body.appendChild(script);
+    });
   };
 
-  // --- 講師 ---
+  // 顯示提示訊息，3秒後自動消失
+  App.ui.showMsg = function(id, text, type) {
+    var el = document.getElementById(id);
+    el.textContent = text;
+    el.className = 'msg msg-' + type;
+    setTimeout(function() { el.className = 'msg'; }, 3000);
+  };
+
+  // 取得講師清單
   App.api.getTeachers = async function() {
-    const result = await App.api.call('getTeachers');
+    var result = await App.api.call('getTeachers');
     App.state.teachers = result.data || [];
-    const el = document.getElementById('table-teachers');
-    if (!result.success || result.data.length === 0) {
+    var el = document.getElementById('table-teachers');
+    if (!result.success || !result.data || result.data.length === 0) {
       el.innerHTML = '<p class="loading">尚無講師資料</p>';
       return;
     }
-    el.innerHTML = `
-      <table>
-        <thead><tr><th>姓名</th><th>Email</th><th>電話</th><th>Line ID</th><th>狀態</th></tr></thead>
-        <tbody>
-          ${result.data.map(t => `
-            <tr>
-              <td>${t.name}</td>
-              <td>${t.email}</td>
-              <td>${t.phone}</td>
-              <td>${t.line_id || '-'}</td>
-              <td><span class="badge badge-${t.status}">${t.status === 'active' ? '在職' : '離職'}</span></td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>`;
+    el.innerHTML = '<table><thead><tr><th>姓名</th><th>Email</th><th>電話</th><th>Line ID</th><th>狀態</th></tr></thead><tbody>' +
+      result.data.map(function(t) {
+        return '<tr><td>' + t.name + '</td><td>' + t.email + '</td><td>' + t.phone + '</td><td>' + (t.line_id || '-') + '</td><td><span class="badge badge-' + t.status + '">' + (t.status === 'active' ? '在職' : '離職') + '</span></td></tr>';
+      }).join('') + '</tbody></table>';
   };
 
+  // 新增講師
   App.api.createTeacher = async function() {
-    const name = document.getElementById('t-name').value.trim();
-    const email = document.getElementById('t-email').value.trim();
-    if (!name || !email) {
-      App.ui.showMsg('msg-teacher', '姓名和 Email 為必填！', 'error');
-      return;
-    }
-    const result = await App.api.call('createTeacher', {
-      name, email,
+    var name = document.getElementById('t-name').value.trim();
+    var email = document.getElementById('t-email').value.trim();
+    if (!name || !email) { App.ui.showMsg('msg-teacher', '姓名和 Email 為必填！', 'error'); return; }
+    var result = await App.api.call('createTeacher', {
+      name: name, email: email,
       phone: document.getElementById('t-phone').value.trim(),
       line_id: document.getElementById('t-line').value.trim()
     });
@@ -246,37 +201,26 @@ App.api.call = function(action, payload = {}) {
     }
   };
 
-  // --- 課程 ---
+  // 取得課程清單
   App.api.getCourses = async function() {
-    const result = await App.api.call('getCourses');
+    var result = await App.api.call('getCourses');
     App.state.courses = result.data || [];
-    const el = document.getElementById('table-courses');
-    if (!result.success || result.data.length === 0) {
+    var el = document.getElementById('table-courses');
+    if (!result.success || !result.data || result.data.length === 0) {
       el.innerHTML = '<p class="loading">尚無課程資料</p>';
       return;
     }
-    el.innerHTML = `
-      <table>
-        <thead><tr><th>課程名稱</th><th>狀態</th><th>建立時間</th></tr></thead>
-        <tbody>
-          ${result.data.map(c => `
-            <tr>
-              <td>${c.name}</td>
-              <td><span class="badge badge-${c.status}">${c.status === 'active' ? '開放' : '停用'}</span></td>
-              <td>${c.created_at ? c.created_at.slice(0,10) : '-'}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>`;
+    el.innerHTML = '<table><thead><tr><th>課程名稱</th><th>狀態</th><th>建立時間</th></tr></thead><tbody>' +
+      result.data.map(function(c) {
+        return '<tr><td>' + c.name + '</td><td><span class="badge badge-' + c.status + '">' + (c.status === 'active' ? '開放' : '停用') + '</span></td><td>' + (c.created_at ? c.created_at.slice(0,10) : '-') + '</td></tr>';
+      }).join('') + '</tbody></table>';
   };
 
+  // 新增課程
   App.api.createCourse = async function() {
-    const name = document.getElementById('c-name').value.trim();
-    if (!name) {
-      App.ui.showMsg('msg-course', '課程名稱為必填！', 'error');
-      return;
-    }
-    const result = await App.api.call('createCourse', { name });
+    var name = document.getElementById('c-name').value.trim();
+    if (!name) { App.ui.showMsg('msg-course', '課程名稱為必填！', 'error'); return; }
+    var result = await App.api.call('createCourse', { name: name });
     if (result.success) {
       App.ui.showMsg('msg-course', '新增成功！', 'success');
       document.getElementById('c-name').value = '';
@@ -286,35 +230,24 @@ App.api.call = function(action, payload = {}) {
     }
   };
 
-  // --- 開課紀錄 ---
+  // 取得開課紀錄清單
   App.api.getSessions = async function() {
-    const result = await App.api.call('getSessions');
+    var result = await App.api.call('getSessions');
     App.state.sessions = result.data || [];
-    const el = document.getElementById('table-sessions');
-    if (!result.success || result.data.length === 0) {
+    var el = document.getElementById('table-sessions');
+    if (!result.success || !result.data || result.data.length === 0) {
       el.innerHTML = '<p class="loading">尚無開課紀錄</p>';
       return;
     }
-    el.innerHTML = `
-      <table>
-        <thead><tr><th>類型</th><th>課程</th><th>講師</th><th>日期</th><th>時間</th><th>狀態</th></tr></thead>
-        <tbody>
-          ${result.data.map(s => `
-            <tr>
-              <td>${s.type === 'regular' ? '常態班' : '營隊'}</td>
-              <td>${s.course_id}</td>
-              <td>${s.teacher_id}</td>
-              <td>${s.date}</td>
-              <td>${s.time_start} - ${s.time_end}</td>
-              <td><span class="badge badge-active">${s.status}</span></td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>`;
+    el.innerHTML = '<table><thead><tr><th>類型</th><th>課程</th><th>講師</th><th>日期</th><th>時間</th><th>狀態</th></tr></thead><tbody>' +
+      result.data.map(function(s) {
+        return '<tr><td>' + (s.type === 'regular' ? '常態班' : '營隊') + '</td><td>' + s.course_id + '</td><td>' + s.teacher_id + '</td><td>' + s.date + '</td><td>' + s.time_start + ' - ' + s.time_end + '</td><td><span class="badge badge-active">' + s.status + '</span></td></tr>';
+      }).join('') + '</tbody></table>';
   };
 
+  // 新增開課紀錄
   App.api.createSession = async function() {
-    const result = await App.api.call('createSession', {
+    var result = await App.api.call('createSession', {
       type: document.getElementById('s-type').value,
       course_id: document.getElementById('s-course').value.trim(),
       teacher_id: document.getElementById('s-teacher').value.trim(),
@@ -330,7 +263,7 @@ App.api.call = function(action, payload = {}) {
     }
   };
 
-  // 初始載入
+  // 初始載入講師資料
   App.api.getTeachers();
 </script>
 </body>
