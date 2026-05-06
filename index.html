@@ -156,19 +156,36 @@
     if (page === 'sessions') App.api.getSessions();
   };
 
-// 共用 fetch 函式
-// 使用 no-cors mode 避免 CORS 問題
-// 注意：no-cors 模式下無法讀取回應內容，所以改用 GET 參數傳遞 action
-App.api.call = async function(action, payload = {}) {
-  try {
-    // 將資料編碼後附加到網址上，改用 GET 方式呼叫
+// 共用 JSONP 呼叫函式
+// JSONP 原理：動態插入 <script> 標籤，繞過瀏覽器跨域限制
+App.api.call = function(action, payload = {}) {
+  return new Promise((resolve, reject) => {
+    // 產生唯一的 callback 函式名稱，避免多個請求衝突
+    const callbackName = 'cb_' + Date.now();
+    
+    // 把 callback 函式掛到 window 上，讓 script 載入後可以呼叫
+    window[callbackName] = function(data) {
+      resolve(data);
+      // 清除用完的 callback 函式和 script 標籤
+      delete window[callbackName];
+      document.getElementById(callbackName).remove();
+    };
+
+    // 組合網址
     const params = encodeURIComponent(JSON.stringify({ action, payload }));
-    const url = SCRIPT_URL + '?data=' + params;
-    const res = await fetch(url);
-    return await res.json();
-  } catch (err) {
-    return { success: false, error: err.message };
-  }
+    const url = SCRIPT_URL + '?data=' + params + '&callback=' + callbackName;
+
+    // 動態插入 <script> 標籤發送請求
+    const script = document.createElement('script');
+    script.id = callbackName;
+    script.src = url;
+    script.onerror = () => {
+      reject(new Error('請求失敗'));
+      delete window[callbackName];
+      script.remove();
+    };
+    document.body.appendChild(script);
+  });
 };
 
   // 顯示訊息
