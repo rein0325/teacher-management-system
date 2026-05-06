@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>講師管理系統</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
+    h1 { margin-bottom: 20px; color: #333; }
+    .section { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+    h2 { margin-bottom: 12px; font-size: 16px; color: #555; }
+    input, select { padding: 8px; margin: 4px; border: 1px solid #ccc; border-radius: 4px; }
+    button { padding: 8px 16px; margin: 4px; background: #4285f4; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #2a6dd9; }
+    pre { background: #f0f0f0; padding: 12px; border-radius: 4px; font-size: 13px; overflow-x: auto; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>📚 講師管理系統</h1>
+
+  <!-- 講師清單 -->
+  <div class="section">
+    <h2>講師清單</h2>
+    <button onclick="App.api.getTeachers()">載入講師</button>
+    <pre id="output-teachers">（點擊載入）</pre>
+  </div>
+
+  <!-- 新增講師 -->
+  <div class="section">
+    <h2>新增講師</h2>
+    <input id="teacher-name" placeholder="姓名" />
+    <input id="teacher-email" placeholder="Email" />
+    <input id="teacher-phone" placeholder="電話" />
+    <input id="teacher-line" placeholder="Line ID（選填）" />
+    <button onclick="App.api.createTeacher()">新增</button>
+    <pre id="output-create-teacher">（結果會顯示在這）</pre>
+  </div>
+
+  <!-- 課程清單 -->
+  <div class="section">
+    <h2>課程清單</h2>
+    <button onclick="App.api.getCourses()">載入課程</button>
+    <pre id="output-courses">（點擊載入）</pre>
+  </div>
+
+  <!-- 新增課程 -->
+  <div class="section">
+    <h2>新增課程</h2>
+    <input id="course-name" placeholder="課程名稱" />
+    <button onclick="App.api.createCourse()">新增</button>
+    <pre id="output-create-course">（結果會顯示在這）</pre>
+  </div>
+
+  <script>
+    // Apps Script 網頁應用程式網址，部署後填入
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-BbbcHTd1LgkcdcgBvHosN9OtgxuojIArBj2E9GrVaHsgAm6b22rVcXbBdHZpWlZ_mA/exec';
+
+    const App = {
+      api: {},
+      ui: {}
+    };
+
+    // 共用 fetch 函式
+    App.api.call = async function(action, payload = {}) {
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action, payload })
+        });
+        return await res.json();
+      } catch (err) {
+        return { success: false, error: err.message };
+      }
+    };
+
+    // 取得講師
+    App.api.getTeachers = async function() {
+      const result = await App.api.call('getTeachers');
+      document.getElementById('output-teachers').textContent = JSON.stringify(result, null, 2);
+    };
+
+    // 新增講師
+    App.api.createTeacher = async function() {
+      const payload = {
+        name: document.getElementById('teacher-name').value,
+        email: document.getElementById('teacher-email').value,
+        phone: document.getElementById('teacher-phone').value,
+        line_id: document.getElementById('teacher-line').value
+      };
+      const result = await App.api.call('createTeacher', payload);
+      document.getElementById('output-create-teacher').textContent = JSON.stringify(result, null, 2);
+    };
+
+    // 取得課程
+    App.api.getCourses = async function() {
+      const result = await App.api.call('getCourses');
+      document.getElementById('output-courses').textContent = JSON.stringify(result, null, 2);
+    };
+
+    // 新增課程
+    App.api.createCourse = async function() {
+      const payload = {
+        name: document.getElementById('course-name').value
+      };
+      const result = await App.api.call('createCourse', payload);
+      document.getElementById('output-create-course').textContent = JSON.stringify(result, null, 2);
+    };
+  </script>
+</body>
+</html>
