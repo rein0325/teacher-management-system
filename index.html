@@ -156,15 +156,20 @@
     if (page === 'sessions') App.api.getSessions();
   };
 
-  // 共用 fetch
-  App.api.call = async function(action, payload = {}) {
-    const res = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action, payload })
-    });
+// 共用 fetch 函式
+// 使用 no-cors mode 避免 CORS 問題
+// 注意：no-cors 模式下無法讀取回應內容，所以改用 GET 參數傳遞 action
+App.api.call = async function(action, payload = {}) {
+  try {
+    // 將資料編碼後附加到網址上，改用 GET 方式呼叫
+    const params = encodeURIComponent(JSON.stringify({ action, payload }));
+    const url = SCRIPT_URL + '?data=' + params;
+    const res = await fetch(url);
     return await res.json();
-  };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
 
   // 顯示訊息
   App.ui.showMsg = function(id, text, type) {
