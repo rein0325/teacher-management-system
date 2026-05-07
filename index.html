@@ -786,10 +786,22 @@ function filterTeachers(status, el) {
   renderTeacherList();
 }
 
-// 查看詳細（含敏感資訊）
+// 開啟講師詳細彈窗
 function openTeacherDetail(id) {
   const t = allTeachers.find(t => t.id === id);
   if (!t) return;
+
+  // 記住當前查看的講師 id，切換技能頁面時會用到
+  currentEditTeacher = t;
+
+  document.getElementById('teacher-modal-title').textContent = `${t.name} — 詳細資料`;
+  document.getElementById('teacher-modal-save-btn').style.display = 'none';
+  renderTeacherDetailBody(t);
+  openModal('teacher-modal');
+}
+
+// 渲染講師詳細內容（獨立成函式，方便從技能頁返回時呼叫）
+function renderTeacherDetailBody(t) {
   document.getElementById('teacher-modal-title').textContent = `${t.name} — 詳細資料`;
   document.getElementById('teacher-modal-save-btn').style.display = 'none';
   document.getElementById('teacher-modal-body').innerHTML = `
@@ -798,7 +810,9 @@ function openTeacherDetail(id) {
       <div class="detail-row"><span class="detail-label">姓名</span><span class="detail-value">${t.name || '—'}</span></div>
       <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${t.email || '—'}</span></div>
       <div class="detail-row"><span class="detail-label">手機</span><span class="detail-value">${t.phone || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">狀態</span><span class="detail-value"><span class="badge badge-${t.status === 'active' ? 'active' : 'inactive'}">${t.status === 'active' ? '在職' : '離職'}</span></span></div>
+      <div class="detail-row"><span class="detail-label">狀態</span><span class="detail-value">
+        <span class="badge badge-${t.status === 'active' ? 'active' : 'inactive'}">${t.status === 'active' ? '在職' : '離職'}</span>
+      </span></div>
     </div>
     <div class="detail-section">
       <div class="detail-section-title">🔒 敏感資訊</div>
@@ -812,13 +826,11 @@ function openTeacherDetail(id) {
       <div class="detail-row"><span class="detail-label">銀行帳號</span><span class="detail-value">${t.bank_account || '—'}</span></div>
     </div>
     ${t.note ? `<div class="detail-section"><div class="detail-section-title">備註</div><div style="font-size:13px;color:var(--gray-800);line-height:1.6">${t.note}</div></div>` : ''}
+    <hr class="section-sep">
+    <div style="display:flex;justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="openTeacherSkills('${t.id}')">📚 授課技能設定</button>
+    </div>
   `;
-  openModal('teacher-modal');
-}
-
-function getBankName(code) {
-  const b = BANKS.find(b => b.code === String(code));
-  return b ? b.name : '';
 }
 
 // 編輯講師
@@ -893,6 +905,87 @@ function selectBankEdit(code, name) {
   document.getElementById('e-bank-search').value = `${code} ${name}`;
   document.getElementById('e-bank-code').value = code;
   document.getElementById('bank-dropdown-edit').classList.remove('show');
+}
+
+// 切換彈窗內容到授課技能設定頁面
+async function openTeacherSkills(teacherId) {
+  const t = allTeachers.find(t => t.id === teacherId);
+  if (!t) return;
+
+  document.getElementById('teacher-modal-title').textContent = `${t.name} — 授課技能設定`;
+  document.getElementById('teacher-modal-save-btn').style.display = 'none';
+
+  // 先顯示載入中
+  document.getElementById('teacher-modal-body').innerHTML = `<div class="loading">載入中...</div>`;
+
+  try {
+    // 從後端取得這位講師已有的技能設定
+    const res = await App.call('getTeacherSkills', { teacher_id: teacherId });
+    const existingSkills = res.success ? res.data : [];
+
+    // 已設定的課程 id 清單，方便後續勾選判斷
+    const existingCourseIds = existingSkills.map(s => s.course_id);
+
+    // 只顯示上課中的課程供勾選
+    const activeCourses = allCourses.filter(c => c.status === 'active');
+
+    document.getElementById('teacher-modal-body').innerHTML = `
+      <!-- 返回按鈕 -->
+      <button class="btn btn-outline btn-sm" style="margin-bottom:16px" onclick="renderTeacherDetailBody(currentEditTeacher)">
+        ← 返回詳細資料
+      </button>
+
+      ${activeCourses.length === 0
+        ? `<div class="empty-state"><div class="empty-state-icon">📚</div><p>目前沒有上課中的課程</p></div>`
+        : `
+          <div style="font-size:12px;color:var(--gray-600);margin-bottom:12px">
+            勾選這位講師會教的課程，儲存後即生效
+          </div>
+          <div id="skills-checkbox-list">
+            ${activeCourses.map(c => `
+              <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-100);cursor:pointer;font-size:14px;">
+                <input type="checkbox" value="${c.id}"
+                  ${existingCourseIds.includes(c.id) ? 'checked' : ''}
+                  style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary)">
+                <span>${c.name}</span>
+                <span class="badge badge-${c.type === 'regular' ? 'regular' : 'camp'}" style="margin-left:4px">
+                  ${c.type === 'regular' ? '常態班' : '營隊'}
+                </span>
+              </label>
+            `).join('')}
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+            <button class="btn btn-primary" onclick="saveTeacherSkills('${teacherId}')">儲存技能</button>
+          </div>
+        `
+      }
+    `;
+  } catch(e) {
+    document.getElementById('teacher-modal-body').innerHTML = `<div class="empty-state"><p>載入失敗，請稍後再試</p></div>`;
+  }
+}
+
+// 儲存講師技能（取得所有勾選的課程 id，送出到後端）
+async function saveTeacherSkills(teacherId) {
+  // 收集所有被勾選的課程 id
+  const checkboxes = document.querySelectorAll('#skills-checkbox-list input[type="checkbox"]');
+  const checkedIds = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+
+  try {
+    const res = await App.call('setTeacherSkills', {
+      teacher_id: teacherId,
+      course_ids: checkedIds
+    });
+    if (res.success) {
+      showToast('✓ 授課技能已儲存');
+      // 儲存後返回詳細頁
+      renderTeacherDetailBody(currentEditTeacher);
+    } else {
+      showToast('儲存失敗：' + res.error);
+    }
+  } catch(e) {
+    showToast('儲存失敗，請稍後再試');
+  }
 }
 
 async function saveTeacher() {
@@ -1050,23 +1143,60 @@ async function updateCourseTeacher(courseId, teacherId) {
   } catch(e) { showToast('指定失敗'); }
 }
 
+// 開啟課程詳細彈窗（顯示完整時間資訊與授課講師）
 function openCourseDetail(id) {
   const c = allCourses.find(c => c.id === id);
   if (!c) return;
+
   document.getElementById('course-modal-title').textContent = `${c.name} — 詳細資料`;
   document.getElementById('course-modal-save-btn').style.display = 'none';
-  const typeLabel = c.type === 'regular' ? '常態班' : c.type === 'camp' ? '營隊' : '—';
-  const timeStr = formatCourseTime(c);
 
+  const typeLabel = c.type === 'regular' ? '常態班' : c.type === 'camp' ? '營隊' : '—';
+  const typeBadge = c.type === 'regular' ? 'badge-regular' : 'badge-camp';
+
+  // 依課程類型組合不同的時間顯示區塊
+  let timeBlock = '';
+  if (c.type === 'regular') {
+    timeBlock = `
+      <div class="detail-row"><span class="detail-label">上課星期</span><span class="detail-value">${formatWeekday(c.weekday) || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">上課時間</span><span class="detail-value">${c.time_start && c.time_end ? `${c.time_start} – ${c.time_end}` : '—'}</span></div>
+    `;
+  } else if (c.type === 'camp') {
+    timeBlock = `
+      <div class="detail-row"><span class="detail-label">開始日期</span><span class="detail-value">${c.date_start || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">結束日期</span><span class="detail-value">${c.date_end || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">每日時間</span><span class="detail-value">${c.time_start && c.time_end ? `${c.time_start} – ${c.time_end}` : '—'}</span></div>
+    `;
+  }
+
+  // 找出這門課在 TeacherSkills 中對應的講師（需要先載入 teacherSkills 資料）
+  // 這裡先用 Sessions 最後一筆的 teacher_id 來顯示授課講師
   document.getElementById('course-modal-body').innerHTML = `
     <div class="detail-section">
       <div class="detail-section-title">課程資訊</div>
-      <div class="detail-row"><span class="detail-label">課程名稱</span><span class="detail-value">${c.name}</span></div>
-      <div class="detail-row"><span class="detail-label">類型</span><span class="detail-value">${typeLabel}</span></div>
-      <div class="detail-row"><span class="detail-label">時間</span><span class="detail-value">${timeStr || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">狀態</span><span class="detail-value"><span class="badge badge-${c.status === 'active' ? 'active' : 'inactive'}">${c.status === 'active' ? '上課中' : '已結束'}</span></span></div>
+      <div class="detail-row">
+        <span class="detail-label">課程名稱</span>
+        <span class="detail-value">${c.name}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">類型</span>
+        <span class="detail-value"><span class="badge ${typeBadge}">${typeLabel}</span></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">狀態</span>
+        <span class="detail-value">
+          <span class="badge badge-${c.status === 'active' ? 'active' : 'inactive'}">
+            ${c.status === 'active' ? '上課中' : '已結束'}
+          </span>
+        </span>
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">⏰ 時間資訊</div>
+      ${timeBlock}
     </div>
   `;
+
   openModal('course-modal');
 }
 
