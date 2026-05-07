@@ -361,6 +361,7 @@
   <div class="topbar-logo">📋 講師管理系統</div>
   <button class="nav-btn active" onclick="switchPage('teachers')">講師管理</button>
   <button class="nav-btn" onclick="switchPage('courses')">課程管理</button>
+  <button class="nav-btn" onclick="switchPage('availability')">可上班時間</button>
 </div>
 
 <div class="main">
@@ -556,9 +557,120 @@
     </div>
   </div>
 
-</div>
+  <!-- ========== 可上班時間頁面 ========== -->
+  <div class="page" id="page-availability">
 
-<!-- ========== 講師詳細/編輯彈窗 ========== -->
+    <!-- 選擇講師 -->
+    <div class="card">
+      <div class="card-title">選擇講師</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>講師</label>
+          <select id="avail-teacher-select" onchange="onAvailTeacherChange()">
+            <option value="">— 請選擇講師 —</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 選擇講師後才顯示下方區塊 -->
+    <div id="avail-content" style="display:none">
+
+      <!-- 常態班可上班時間 -->
+      <div class="card">
+        <div class="card-title">常態班可上班時間</div>
+
+        <!-- 新增常態班時間表單 -->
+        <div class="form-row" style="align-items:flex-end">
+          <div class="form-group">
+            <label>星期</label>
+            <select id="avail-reg-weekday">
+              <option value="">請選擇</option>
+              <option value="1">週一</option>
+              <option value="2">週二</option>
+              <option value="3">週三</option>
+              <option value="4">週四</option>
+              <option value="5">週五</option>
+              <option value="6">週六</option>
+              <option value="0">週日</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>開始時間</label>
+            <input type="time" id="avail-reg-start">
+          </div>
+          <div class="form-group">
+            <label>結束時間</label>
+            <input type="time" id="avail-reg-end">
+          </div>
+          <div style="padding-bottom:2px">
+            <button class="btn btn-primary" onclick="addRegularAvailability()">新增</button>
+          </div>
+        </div>
+
+        <!-- 常態班時間清單 -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>星期</th>
+                <th>開始時間</th>
+                <th>結束時間</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="avail-reg-list">
+              <tr><td colspan="4" class="loading">請先選擇講師</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 營隊可上班時間 -->
+      <div class="card">
+        <div class="card-title">營隊可上班時間</div>
+
+        <!-- 新增營隊時間表單 -->
+        <div class="form-row" style="align-items:flex-end">
+          <div class="form-group">
+            <label>開始日期</label>
+            <input type="date" id="avail-camp-start">
+          </div>
+          <div class="form-group">
+            <label>結束日期</label>
+            <input type="date" id="avail-camp-end">
+          </div>
+          <div class="form-group">
+            <label>備註</label>
+            <input type="text" id="avail-camp-note" placeholder="選填">
+          </div>
+          <div style="padding-bottom:2px">
+            <button class="btn btn-primary" onclick="addCampAvailability()">新增</button>
+          </div>
+        </div>
+
+        <!-- 營隊時間清單 -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>開始日期</th>
+                <th>結束日期</th>
+                <th>備註</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="avail-camp-list">
+              <tr><td colspan="4" class="loading">請先選擇講師</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
 <div class="modal-overlay" id="teacher-modal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('teacher-modal')">✕</button>
@@ -593,7 +705,7 @@
 // ============================================================
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-BbbcHTd1LgkcdcgBvHosN9OtgxuojIArBj2E9GrVaHsgAm6b22rVcXbBdHZpWlZ_mA/exec';
 
-// 台灣銀行清單
+// 台灣銀行清單（代碼 + 名稱）
 const BANKS = [
   {code:'004',name:'台灣銀行'},{code:'005',name:'土地銀行'},{code:'006',name:'合作金庫銀行'},
   {code:'007',name:'第一銀行'},{code:'008',name:'華南銀行'},{code:'009',name:'彰化銀行'},
@@ -603,18 +715,25 @@ const BANKS = [
   {code:'050',name:'台灣企銀'},{code:'052',name:'渣打銀行'},{code:'053',name:'台中銀行'},
   {code:'054',name:'京城銀行'},{code:'072',name:'德意志銀行'},{code:'075',name:'東亞銀行'},
   {code:'081',name:'匯豐銀行'},{code:'082',name:'澳盛銀行'},{code:'101',name:'瑞穗銀行'},
-  {code:'102',name:'三井住友銀行'},{code:'103',name:'日本大和Next銀行'},{code:'108',name:'摩根大通'},
+  {code:'102',name:'三井住友銀行'},{code:'108',name:'摩根大通'},
   {code:'118',name:'荷蘭銀行'},{code:'147',name:'三信商銀'},{code:'151',name:'新光銀行'},
   {code:'152',name:'日盛銀行'},{code:'153',name:'台新銀行'},{code:'154',name:'京城商銀'},
-  {code:'158',name:'富邦銀行'},{code:'161',name:'中華銀行'},{code:'162',name:'台灣工業銀行'},
-  {code:'163',name:'玉山銀行'},{code:'165',name:'安泰銀行'},{code:'注意',name:'---信用合作社---'},
-  {code:'201',name:'基隆一信'},{code:'202',name:'基隆二信'},{code:'203',name:'基隆三信'},
-  {code:'注意',name:'---農漁會信用部---'},
+  {code:'158',name:'富邦銀行'},{code:'163',name:'玉山銀行'},{code:'165',name:'安泰銀行'},
   {code:'700',name:'中華郵政'},{code:'805',name:'遠東銀行'},{code:'806',name:'元大銀行'},
-  {code:'807',name:'永豐銀行'},{code:'808',name:'玉山銀行(舊)'},{code:'809',name:'凱基銀行'},
-  {code:'810',name:'星展銀行'},{code:'812',name:'台新銀行(舊)'},{code:'816',name:'安泰銀行(舊)'},
-  {code:'822',name:'中國信託'}
-].filter(b => !b.name.startsWith('---'));
+  {code:'807',name:'永豐銀行'},{code:'809',name:'凱基銀行'},{code:'810',name:'星展銀行'},
+  {code:'812',name:'台新銀行(舊)'},{code:'822',name:'中國信託'}
+];
+
+// ============================================================
+// 講師授課技能清單（固定項目，不從課程撈）
+// 修改這裡即可新增或移除技能選項
+// ============================================================
+const SKILLS = [
+  'Scratch', 'Scratch JR', 'Arcade', 'Scratch+MicroBit', 'Scratch AI',
+  'Python', 'MicroPython',
+  'Lego', 'Minecraft', 'MicroBit', 'Roblox',
+  'MPM數學', '時時學'
+];
 
 // ============================================================
 // 全域狀態
@@ -790,17 +909,14 @@ function filterTeachers(status, el) {
 function openTeacherDetail(id) {
   const t = allTeachers.find(t => t.id === id);
   if (!t) return;
-
-  // 記住當前查看的講師 id，切換技能頁面時會用到
+  // 記住當前講師，技能頁返回時需要
   currentEditTeacher = t;
-
-  document.getElementById('teacher-modal-title').textContent = `${t.name} — 詳細資料`;
   document.getElementById('teacher-modal-save-btn').style.display = 'none';
   renderTeacherDetailBody(t);
   openModal('teacher-modal');
 }
 
-// 渲染講師詳細內容（獨立成函式，方便從技能頁返回時呼叫）
+// 渲染講師詳細內容（獨立成函式，方便從技能頁返回時直接呼叫）
 function renderTeacherDetailBody(t) {
   document.getElementById('teacher-modal-title').textContent = `${t.name} — 詳細資料`;
   document.getElementById('teacher-modal-save-btn').style.display = 'none';
@@ -827,10 +943,88 @@ function renderTeacherDetailBody(t) {
     </div>
     ${t.note ? `<div class="detail-section"><div class="detail-section-title">備註</div><div style="font-size:13px;color:var(--gray-800);line-height:1.6">${t.note}</div></div>` : ''}
     <hr class="section-sep">
+    <!-- 授課技能入口按鈕 -->
     <div style="display:flex;justify-content:flex-end;">
       <button class="btn btn-outline" onclick="openTeacherSkills('${t.id}')">📚 授課技能設定</button>
     </div>
   `;
+}
+
+// ============================================================
+// 講師授課技能設定
+// ============================================================
+
+// 切換彈窗內容到技能設定頁面
+async function openTeacherSkills(teacherId) {
+  const t = allTeachers.find(t => t.id === teacherId);
+  if (!t) return;
+
+  document.getElementById('teacher-modal-title').textContent = `${t.name} — 授課技能設定`;
+  document.getElementById('teacher-modal-save-btn').style.display = 'none';
+  document.getElementById('teacher-modal-body').innerHTML = `<div class="loading">載入中...</div>`;
+
+  try {
+    // 從後端取得這位講師已設定的技能
+    const res = await App.call('getTeacherSkills', { teacher_id: teacherId });
+    // 已設定的技能名稱清單（存在 TeacherSkills 的 course_id 欄位）
+    const existingSkills = res.success ? res.data.map(s => s.course_id) : [];
+
+    document.getElementById('teacher-modal-body').innerHTML = `
+      <!-- 返回詳細資料按鈕 -->
+      <button class="btn btn-outline btn-sm" style="margin-bottom:16px"
+        onclick="renderTeacherDetailBody(currentEditTeacher)">← 返回詳細資料</button>
+      <div style="font-size:12px;color:var(--gray-600);margin-bottom:12px">
+        勾選這位講師會教的技能，儲存後即生效
+      </div>
+      <!-- 技能勾選清單（從固定的 SKILLS 陣列渲染，不從課程撈） -->
+      <div id="skills-checkbox-list">
+        ${SKILLS.map(skill => `
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 0;
+            border-bottom:1px solid var(--gray-100);cursor:pointer;font-size:14px;">
+            <input type="checkbox" value="${skill}"
+              ${existingSkills.includes(skill) ? 'checked' : ''}
+              style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary)">
+            <span>${skill}</span>
+          </label>
+        `).join('')}
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+        <button class="btn btn-primary" onclick="saveTeacherSkills('${teacherId}')">儲存技能</button>
+      </div>
+    `;
+  } catch(e) {
+    document.getElementById('teacher-modal-body').innerHTML =
+      `<div class="empty-state"><p>載入失敗，請稍後再試</p></div>`;
+  }
+}
+
+// 儲存講師技能
+// 注意：技能名稱（如 "Scratch"）直接當作 course_id 存入 TeacherSkills
+// 因為技能是固定清單，與實際課程 UUID 無關
+async function saveTeacherSkills(teacherId) {
+  // 收集所有勾選的技能名稱
+  const checkboxes = document.querySelectorAll('#skills-checkbox-list input[type="checkbox"]');
+  const checkedSkills = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+
+  try {
+    const res = await App.call('setTeacherSkills', {
+      teacher_id: teacherId,
+      course_ids: checkedSkills
+    });
+    if (res.success) {
+      showToast('✓ 授課技能已儲存');
+      renderTeacherDetailBody(currentEditTeacher);
+    } else {
+      showToast('儲存失敗：' + res.error);
+    }
+  } catch(e) {
+    showToast('儲存失敗，請稍後再試');
+  }
+}
+
+function getBankName(code) {
+  const b = BANKS.find(b => b.code === String(code));
+  return b ? b.name : '';
 }
 
 // 編輯講師
@@ -905,87 +1099,6 @@ function selectBankEdit(code, name) {
   document.getElementById('e-bank-search').value = `${code} ${name}`;
   document.getElementById('e-bank-code').value = code;
   document.getElementById('bank-dropdown-edit').classList.remove('show');
-}
-
-// 切換彈窗內容到授課技能設定頁面
-async function openTeacherSkills(teacherId) {
-  const t = allTeachers.find(t => t.id === teacherId);
-  if (!t) return;
-
-  document.getElementById('teacher-modal-title').textContent = `${t.name} — 授課技能設定`;
-  document.getElementById('teacher-modal-save-btn').style.display = 'none';
-
-  // 先顯示載入中
-  document.getElementById('teacher-modal-body').innerHTML = `<div class="loading">載入中...</div>`;
-
-  try {
-    // 從後端取得這位講師已有的技能設定
-    const res = await App.call('getTeacherSkills', { teacher_id: teacherId });
-    const existingSkills = res.success ? res.data : [];
-
-    // 已設定的課程 id 清單，方便後續勾選判斷
-    const existingCourseIds = existingSkills.map(s => s.course_id);
-
-    // 只顯示上課中的課程供勾選
-    const activeCourses = allCourses.filter(c => c.status === 'active');
-
-    document.getElementById('teacher-modal-body').innerHTML = `
-      <!-- 返回按鈕 -->
-      <button class="btn btn-outline btn-sm" style="margin-bottom:16px" onclick="renderTeacherDetailBody(currentEditTeacher)">
-        ← 返回詳細資料
-      </button>
-
-      ${activeCourses.length === 0
-        ? `<div class="empty-state"><div class="empty-state-icon">📚</div><p>目前沒有上課中的課程</p></div>`
-        : `
-          <div style="font-size:12px;color:var(--gray-600);margin-bottom:12px">
-            勾選這位講師會教的課程，儲存後即生效
-          </div>
-          <div id="skills-checkbox-list">
-            ${activeCourses.map(c => `
-              <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-100);cursor:pointer;font-size:14px;">
-                <input type="checkbox" value="${c.id}"
-                  ${existingCourseIds.includes(c.id) ? 'checked' : ''}
-                  style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary)">
-                <span>${c.name}</span>
-                <span class="badge badge-${c.type === 'regular' ? 'regular' : 'camp'}" style="margin-left:4px">
-                  ${c.type === 'regular' ? '常態班' : '營隊'}
-                </span>
-              </label>
-            `).join('')}
-          </div>
-          <div style="display:flex;justify-content:flex-end;margin-top:16px;">
-            <button class="btn btn-primary" onclick="saveTeacherSkills('${teacherId}')">儲存技能</button>
-          </div>
-        `
-      }
-    `;
-  } catch(e) {
-    document.getElementById('teacher-modal-body').innerHTML = `<div class="empty-state"><p>載入失敗，請稍後再試</p></div>`;
-  }
-}
-
-// 儲存講師技能（取得所有勾選的課程 id，送出到後端）
-async function saveTeacherSkills(teacherId) {
-  // 收集所有被勾選的課程 id
-  const checkboxes = document.querySelectorAll('#skills-checkbox-list input[type="checkbox"]');
-  const checkedIds = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
-
-  try {
-    const res = await App.call('setTeacherSkills', {
-      teacher_id: teacherId,
-      course_ids: checkedIds
-    });
-    if (res.success) {
-      showToast('✓ 授課技能已儲存');
-      // 儲存後返回詳細頁
-      renderTeacherDetailBody(currentEditTeacher);
-    } else {
-      showToast('儲存失敗：' + res.error);
-    }
-  } catch(e) {
-    showToast('儲存失敗，請稍後再試');
-  }
 }
 
 async function saveTeacher() {
@@ -1143,60 +1256,23 @@ async function updateCourseTeacher(courseId, teacherId) {
   } catch(e) { showToast('指定失敗'); }
 }
 
-// 開啟課程詳細彈窗（顯示完整時間資訊與授課講師）
 function openCourseDetail(id) {
   const c = allCourses.find(c => c.id === id);
   if (!c) return;
-
   document.getElementById('course-modal-title').textContent = `${c.name} — 詳細資料`;
   document.getElementById('course-modal-save-btn').style.display = 'none';
-
   const typeLabel = c.type === 'regular' ? '常態班' : c.type === 'camp' ? '營隊' : '—';
-  const typeBadge = c.type === 'regular' ? 'badge-regular' : 'badge-camp';
+  const timeStr = formatCourseTime(c);
 
-  // 依課程類型組合不同的時間顯示區塊
-  let timeBlock = '';
-  if (c.type === 'regular') {
-    timeBlock = `
-      <div class="detail-row"><span class="detail-label">上課星期</span><span class="detail-value">${formatWeekday(c.weekday) || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">上課時間</span><span class="detail-value">${c.time_start && c.time_end ? `${c.time_start} – ${c.time_end}` : '—'}</span></div>
-    `;
-  } else if (c.type === 'camp') {
-    timeBlock = `
-      <div class="detail-row"><span class="detail-label">開始日期</span><span class="detail-value">${c.date_start || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">結束日期</span><span class="detail-value">${c.date_end || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">每日時間</span><span class="detail-value">${c.time_start && c.time_end ? `${c.time_start} – ${c.time_end}` : '—'}</span></div>
-    `;
-  }
-
-  // 找出這門課在 TeacherSkills 中對應的講師（需要先載入 teacherSkills 資料）
-  // 這裡先用 Sessions 最後一筆的 teacher_id 來顯示授課講師
   document.getElementById('course-modal-body').innerHTML = `
     <div class="detail-section">
       <div class="detail-section-title">課程資訊</div>
-      <div class="detail-row">
-        <span class="detail-label">課程名稱</span>
-        <span class="detail-value">${c.name}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">類型</span>
-        <span class="detail-value"><span class="badge ${typeBadge}">${typeLabel}</span></span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">狀態</span>
-        <span class="detail-value">
-          <span class="badge badge-${c.status === 'active' ? 'active' : 'inactive'}">
-            ${c.status === 'active' ? '上課中' : '已結束'}
-          </span>
-        </span>
-      </div>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">⏰ 時間資訊</div>
-      ${timeBlock}
+      <div class="detail-row"><span class="detail-label">課程名稱</span><span class="detail-value">${c.name}</span></div>
+      <div class="detail-row"><span class="detail-label">類型</span><span class="detail-value">${typeLabel}</span></div>
+      <div class="detail-row"><span class="detail-label">時間</span><span class="detail-value">${timeStr || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">狀態</span><span class="detail-value"><span class="badge badge-${c.status === 'active' ? 'active' : 'inactive'}">${c.status === 'active' ? '上課中' : '已結束'}</span></span></div>
     </div>
   `;
-
   openModal('course-modal');
 }
 
@@ -1318,10 +1394,162 @@ async function createCourse() {
 }
 
 // ============================================================
+// ===== 可上班時間 =====
+// ============================================================
+
+// 目前可上班時間頁面選擇的講師 id
+let currentAvailTeacherId = null;
+// 暫存撈回的可上班時間資料
+let currentAvailData = { regular: [], camp: [] };
+
+// 當切換到可上班時間頁面時，填入講師下拉選單
+function populateAvailTeacherSelect() {
+  const sel = document.getElementById('avail-teacher-select');
+  const current = sel.value;
+  // 只顯示在職講師
+  sel.innerHTML = '<option value="">— 請選擇講師 —</option>' +
+    allTeachers.filter(t => t.status === 'active')
+      .map(t => `<option value="${t.id}" ${t.id === current ? 'selected' : ''}>${t.name}</option>`)
+      .join('');
+}
+
+// 選擇講師後載入該講師的可上班時間
+async function onAvailTeacherChange() {
+  const teacherId = document.getElementById('avail-teacher-select').value;
+  if (!teacherId) {
+    document.getElementById('avail-content').style.display = 'none';
+    return;
+  }
+  currentAvailTeacherId = teacherId;
+  document.getElementById('avail-content').style.display = 'block';
+  document.getElementById('avail-reg-list').innerHTML = `<tr><td colspan="4" class="loading">載入中...</td></tr>`;
+  document.getElementById('avail-camp-list').innerHTML = `<tr><td colspan="4" class="loading">載入中...</td></tr>`;
+
+  try {
+    const res = await App.call('getAvailability', { teacher_id: teacherId });
+    if (res.success) {
+      currentAvailData = res.data;
+      renderRegularAvailList(res.data.regular);
+      renderCampAvailList(res.data.camp);
+    } else {
+      showToast('載入失敗');
+    }
+  } catch(e) {
+    showToast('載入失敗，請稍後再試');
+  }
+}
+
+// 渲染常態班可上班時間清單
+function renderRegularAvailList(list) {
+  const tbody = document.getElementById('avail-reg-list');
+  if (!list || !list.length) {
+    tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📅</div><p>尚無常態班時間設定</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = list.map(row => `
+    <tr>
+      <td>${formatWeekday(row.weekday)}</td>
+      <td>${row.time_start || '—'}</td>
+      <td>${row.time_end || '—'}</td>
+      <td>
+        <button class="btn btn-sm btn-danger" onclick="deleteAvailability('regular', '${row.id}')">刪除</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// 渲染營隊可上班時間清單
+function renderCampAvailList(list) {
+  const tbody = document.getElementById('avail-camp-list');
+  if (!list || !list.length) {
+    tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">🏕️</div><p>尚無營隊時間設定</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = list.map(row => `
+    <tr>
+      <td>${row.date_start || '—'}</td>
+      <td>${row.date_end || '—'}</td>
+      <td>${row.note || '—'}</td>
+      <td>
+        <button class="btn btn-sm btn-danger" onclick="deleteAvailability('camp', '${row.id}')">刪除</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// 新增常態班可上班時間
+async function addRegularAvailability() {
+  if (!currentAvailTeacherId) { showToast('請先選擇講師'); return; }
+  const weekday = document.getElementById('avail-reg-weekday').value;
+  const timeStart = document.getElementById('avail-reg-start').value;
+  const timeEnd = document.getElementById('avail-reg-end').value;
+  if (!weekday) { showToast('請選擇星期'); return; }
+  if (!timeStart || !timeEnd) { showToast('請填寫開始與結束時間'); return; }
+  if (timeStart >= timeEnd) { showToast('結束時間必須晚於開始時間'); return; }
+
+  try {
+    const res = await App.call('createAvailability', {
+      type: 'regular',
+      teacher_id: currentAvailTeacherId,
+      weekday,
+      time_start: timeStart,
+      time_end: timeEnd
+    });
+    if (res.success) {
+      showToast('✓ 已新增常態班時間');
+      // 清空欄位
+      document.getElementById('avail-reg-weekday').value = '';
+      document.getElementById('avail-reg-start').value = '';
+      document.getElementById('avail-reg-end').value = '';
+      // 重新載入
+      await onAvailTeacherChange();
+    } else { showToast('新增失敗：' + res.error); }
+  } catch(e) { showToast('新增失敗，請稍後再試'); }
+}
+
+// 新增營隊可上班時間
+async function addCampAvailability() {
+  if (!currentAvailTeacherId) { showToast('請先選擇講師'); return; }
+  const dateStart = document.getElementById('avail-camp-start').value;
+  const dateEnd = document.getElementById('avail-camp-end').value;
+  const note = document.getElementById('avail-camp-note').value.trim();
+  if (!dateStart || !dateEnd) { showToast('請填寫開始與結束日期'); return; }
+  if (dateStart > dateEnd) { showToast('結束日期必須晚於開始日期'); return; }
+
+  try {
+    const res = await App.call('createAvailability', {
+      type: 'camp',
+      teacher_id: currentAvailTeacherId,
+      date_start: dateStart,
+      date_end: dateEnd,
+      note
+    });
+    if (res.success) {
+      showToast('✓ 已新增營隊時間');
+      // 清空欄位
+      document.getElementById('avail-camp-start').value = '';
+      document.getElementById('avail-camp-end').value = '';
+      document.getElementById('avail-camp-note').value = '';
+      // 重新載入
+      await onAvailTeacherChange();
+    } else { showToast('新增失敗：' + res.error); }
+  } catch(e) { showToast('新增失敗，請稍後再試'); }
+}
+
+// 刪除可上班時間（目前後端沒有 deleteAvailability，先做前端提示）
+// TODO: 之後後端補上 deleteAvailability action 後再串接
+function deleteAvailability(type, id) {
+  showToast('⚠️ 刪除功能需要後端支援，即將新增');
+}
+
+// ============================================================
 // 初始化
 // ============================================================
 (async function init() {
+  // 同時載入講師與課程資料
   await Promise.all([loadTeachers(), loadCourses()]);
+  // 講師資料載入後填入可上班時間頁面的講師下拉選單
+  populateAvailTeacherSelect();
 })();
 </script>
 </body>

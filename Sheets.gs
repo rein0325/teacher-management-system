@@ -1,4 +1,4 @@
-// 試算表 ID，請換成你自己的 Sheets ID
+// 試算表 ID
 const SPREADSHEET_ID = '1iNtYBr9IA4KG36bPg9NDGXgI7bmTS_fDQbWAaCy-dlA';
 
 const SHEET_NAMES = {
@@ -10,21 +10,11 @@ const SHEET_NAMES = {
   SESSIONS: 'Sessions'
 };
 
-/**
- * 取得指定工作表
- * @param {String} sheetName 工作表名稱
- * @returns {Sheet} Google Sheets 工作表物件
- */
 function getSheet(sheetName) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   return ss.getSheetByName(sheetName);
 }
 
-/**
- * 取得工作表所有資料（排除第一列欄位名稱）
- * @param {String} sheetName 工作表名稱
- * @returns {Object[]} 資料陣列
- */
 function getAllRows(sheetName) {
   const sheet = getSheet(sheetName);
   const data = sheet.getDataRange().getValues();
@@ -36,31 +26,18 @@ function getAllRows(sheetName) {
   });
 }
 
-/**
- * 新增一列資料到工作表
- * @param {String} sheetName 工作表名稱
- * @param {Object} rowData 要新增的資料物件
- */
 function appendRow(sheetName, rowData) {
   const sheet = getSheet(sheetName);
   const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-  const row = headers.map(header => rowData[header] || '');
+  const row = headers.map(header => rowData[header] !== undefined ? rowData[header] : '');
   sheet.appendRow(row);
 }
 
-/**
- * 更新指定 id 的那列資料
- * @param {String} sheetName 工作表名稱
- * @param {String} id 要更新的資料 id
- * @param {Object} newData 新的資料物件
- * @returns {Boolean} 是否成功
- */
 function updateRowById(sheetName, id, newData) {
   const sheet = getSheet(sheetName);
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
   const idIndex = headers.indexOf('id');
-
   for (let i = 1; i < data.length; i++) {
     if (data[i][idIndex] === id) {
       headers.forEach((header, j) => {
@@ -75,6 +52,8 @@ function updateRowById(sheetName, id, newData) {
 }
 
 // --- Teachers ---
+// 欄位順序：id, name, id_number, email, phone, birthday, address, bank_code, bank_account, status, note, created_at
+
 function getTeachers() {
   return getAllRows(SHEET_NAMES.TEACHERS);
 }
@@ -83,10 +62,15 @@ function createTeacher(payload) {
   const row = {
     id: generateUUID(),
     name: payload.name || '',
+    id_number: payload.id_number || '',
     email: payload.email || '',
     phone: payload.phone || '',
-    line_id: payload.line_id || '',
+    birthday: payload.birthday || '',
+    address: payload.address || '',
+    bank_code: payload.bank_code || '',
+    bank_account: payload.bank_account || '',
     status: 'active',
+    note: payload.note || '',
     created_at: getCurrentTimestamp()
   };
   appendRow(SHEET_NAMES.TEACHERS, row);
@@ -98,6 +82,8 @@ function updateTeacher(payload) {
 }
 
 // --- Courses ---
+// 欄位順序：id, type, name, weekday, time_start, time_end, date_start, date_end, status, created_at
+
 function getCourses() {
   return getAllRows(SHEET_NAMES.COURSES);
 }
@@ -105,7 +91,13 @@ function getCourses() {
 function createCourse(payload) {
   const row = {
     id: generateUUID(),
+    type: payload.type || 'regular',
     name: payload.name || '',
+    weekday: payload.weekday !== undefined ? payload.weekday : '',
+    time_start: payload.time_start || '',
+    time_end: payload.time_end || '',
+    date_start: payload.date_start || '',
+    date_end: payload.date_end || '',
     status: 'active',
     created_at: getCurrentTimestamp()
   };
@@ -113,7 +105,12 @@ function createCourse(payload) {
   return row;
 }
 
+function updateCourse(payload) {
+  return updateRowById(SHEET_NAMES.COURSES, payload.id, payload);
+}
+
 // --- TeacherSkills ---
+
 function getTeacherSkills(payload) {
   const all = getAllRows(SHEET_NAMES.TEACHER_SKILLS);
   if (payload && payload.teacher_id) {
@@ -123,16 +120,11 @@ function getTeacherSkills(payload) {
 }
 
 function setTeacherSkills(payload) {
-  const sheet = getSheet(SHEET_NAMES.TEACHER_SKILLS);
-  const all = getAllRows(SHEET_NAMES.TEACHER_SKILLS);
   const teacherId = payload.teacher_id;
   const courseIds = payload.course_ids || [];
-
-  // 取得現有的技能
+  const all = getAllRows(SHEET_NAMES.TEACHER_SKILLS);
   const existing = all.filter(row => row.teacher_id === teacherId);
   const existingCourseIds = existing.map(row => row.course_id);
-
-  // 新增不存在的技能
   courseIds.forEach(courseId => {
     if (!existingCourseIds.includes(courseId)) {
       appendRow(SHEET_NAMES.TEACHER_SKILLS, {
@@ -147,6 +139,7 @@ function setTeacherSkills(payload) {
 }
 
 // --- Availability ---
+
 function getAvailability(payload) {
   const regular = getAllRows(SHEET_NAMES.REGULAR_AVAILABILITY);
   const camp = getAllRows(SHEET_NAMES.CAMP_AVAILABILITY);
@@ -185,6 +178,7 @@ function createAvailability(payload) {
 }
 
 // --- Sessions ---
+
 function getSessions() {
   return getAllRows(SHEET_NAMES.SESSIONS);
 }
@@ -207,4 +201,30 @@ function createSession(payload) {
 
 function updateSession(payload) {
   return updateRowById(SHEET_NAMES.SESSIONS, payload.id, payload);
+}
+
+// 刪除指定工作表中符合 id 的那一行
+function deleteRowById(sheetName, id) {
+  const sheet = getSheet(sheetName);
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+  const idIndex = headers.indexOf('id');
+  // 從最後一行往上找，避免刪除後行號錯位
+  for (let i = data.length - 1; i >= 1; i--) {
+    if (data[i][idIndex] === id) {
+      sheet.deleteRow(i + 1);
+      return true;
+    }
+  }
+  return false;
+}
+
+// 刪除可上班時間（type 為 'regular' 或 'camp'）
+function deleteAvailability(payload) {
+  if (payload.type === 'regular') {
+    return deleteRowById(SHEET_NAMES.REGULAR_AVAILABILITY, payload.id);
+  } else if (payload.type === 'camp') {
+    return deleteRowById(SHEET_NAMES.CAMP_AVAILABILITY, payload.id);
+  }
+  return false;
 }

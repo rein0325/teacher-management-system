@@ -59,6 +59,8 @@ function doPost(e) {
         return successResponse(getCourses());
       case 'createCourse':
         return successResponse(createCourse(payload));
+      case 'updateCourse':
+        return successResponse(updateCourse(payload));
 
       // 講師技能相關
       case 'getTeacherSkills':
@@ -71,6 +73,8 @@ function doPost(e) {
         return successResponse(getAvailability(payload));
       case 'createAvailability':
         return successResponse(createAvailability(payload));
+      case 'deleteAvailability':
+        return successResponse(deleteAvailability(payload));
 
       // 開課紀錄相關
       case 'getSessions':
@@ -91,11 +95,62 @@ function doPost(e) {
 }
 
 /**
- * 處理 GET 請求，回傳前端頁面
- * @returns {HtmlOutput} 前端頁面
+ * 處理 GET 請求
+ * 支援 JSONP 格式回應，解決跨域問題
+ * JSONP 原理：把回應包在一個函式呼叫裡，繞過瀏覽器的跨域限制
  */
-function doGet() {
+function doGet(e) {
+  // 如果有帶 data 參數，表示是 API 呼叫
+  if (e && e.parameter && e.parameter.data) {
+    try {
+      // 解析前端傳來的資料
+      var request = JSON.parse(e.parameter.data);
+      var action = request.action;
+      var payload = request.payload || {};
+      var result;
+
+      // 根據 action 決定呼叫哪個函式
+      switch (action) {
+        case 'getTeachers':      result = successData(getTeachers()); break;
+        case 'createTeacher':    result = successData(createTeacher(payload)); break;
+        case 'updateTeacher':    result = successData(updateTeacher(payload)); break;
+        case 'getCourses':       result = successData(getCourses()); break;
+        case 'createCourse':     result = successData(createCourse(payload)); break;
+        case 'getTeacherSkills': result = successData(getTeacherSkills(payload)); break;
+        case 'setTeacherSkills': result = successData(setTeacherSkills(payload)); break;
+        case 'getAvailability':  result = successData(getAvailability(payload)); break;
+        case 'createAvailability': result = successData(createAvailability(payload)); break;
+        case 'getSessions':      result = successData(getSessions()); break;
+        case 'createSession':    result = successData(createSession(payload)); break;
+        case 'updateSession':    result = successData(updateSession(payload)); break;
+        default: result = { success: false, error: '未知的 action：' + action };
+      }
+
+      // 用 JSONP 格式回應
+      var callback = e.parameter.callback || 'callback';
+      return ContentService
+        .createTextOutput(callback + '(' + JSON.stringify(result) + ')')
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+
+    } catch (err) {
+      var callback = e.parameter.callback || 'callback';
+      return ContentService
+        .createTextOutput(callback + '(' + JSON.stringify({ success: false, error: err.message }) + ')')
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+  }
+
+  // 沒有 data 參數，回傳前端頁面
   return HtmlService
     .createHtmlOutputFromFile('index')
     .setTitle('講師管理系統');
+}
+
+/**
+ * 產生成功的資料物件（給 doGet JSONP 用）
+ * @param {*} data 回傳資料
+ * @returns {Object} 成功物件
+ */
+function successData(data) {
+  return { success: true, data: data };
 }
