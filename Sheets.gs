@@ -228,3 +228,43 @@ function deleteAvailability(payload) {
   }
   return false;
 }
+
+// ============================================================
+// 分校相關（TeacherBranches 工作表）
+// ============================================================
+
+// 取得講師可去的分校清單
+function getTeacherBranches(payload) {
+  const all = getAllRows(SHEET_NAMES.TEACHER_BRANCHES);
+  if (payload && payload.teacher_id) {
+    return all.filter(row => row.teacher_id === payload.teacher_id);
+  }
+  return all;
+}
+
+// 儲存講師可去的分校（先刪除舊資料再重新寫入）
+function setTeacherBranches(payload) {
+  const teacherId = payload.teacher_id;
+  const branches = payload.branches || [];
+  const sheet = getSheet(SHEET_NAMES.TEACHER_BRANCHES);
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+  const teacherIdIndex = headers.indexOf('teacher_id');
+
+  // 從最後一行往上刪，避免刪除後行號錯位
+  for (let i = data.length - 1; i >= 1; i--) {
+    if (data[i][teacherIdIndex] === teacherId) {
+      sheet.deleteRow(i + 1);
+    }
+  }
+
+  // 重新寫入勾選的分校
+  branches.forEach(branch => {
+    appendRow(SHEET_NAMES.TEACHER_BRANCHES, {
+      id: generateUUID(),
+      teacher_id: teacherId,
+      branch: branch
+    });
+  });
+  return true;
+}
