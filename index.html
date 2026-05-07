@@ -1,270 +1,1198 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- 版本號：強制瀏覽器載入新版 -->
-  <title>講師管理系統 v2</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
-    nav { background: #1a73e8; padding: 0 24px; display: flex; align-items: center; height: 56px; }
-    nav h1 { color: #fff; font-size: 18px; margin-right: 32px; }
-    nav button { background: transparent; color: rgba(255,255,255,0.8); border: none; padding: 8px 16px; cursor: pointer; font-size: 14px; border-radius: 4px; }
-    nav button:hover, nav button.active { background: rgba(255,255,255,0.2); color: #fff; }
-    main { max-width: 900px; margin: 24px auto; padding: 0 16px; }
-    .page { display: none; }
-    .page.active { display: block; }
-    .card { background: #fff; border-radius: 8px; padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    .card h2 { font-size: 16px; color: #555; margin-bottom: 16px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
-    .form-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-    input, select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; flex: 1; min-width: 150px; }
-    input:focus { outline: none; border-color: #1a73e8; }
-    .btn { padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
-    .btn-primary { background: #1a73e8; color: #fff; }
-    .btn-primary:hover { background: #1557b0; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    th { background: #f8f9fa; padding: 10px 12px; text-align: left; color: #666; font-weight: 500; border-bottom: 2px solid #eee; }
-    td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; }
-    tr:hover td { background: #fafafa; }
-    .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
-    .badge-active { background: #e6f4ea; color: #137333; }
-    .badge-inactive { background: #fce8e6; color: #c5221f; }
-    .msg { padding: 10px 14px; border-radius: 4px; margin-top: 12px; font-size: 14px; display: none; }
-    .msg-success { background: #e6f4ea; color: #137333; display: block; }
-    .msg-error { background: #fce8e6; color: #c5221f; display: block; }
-    .loading { color: #999; font-size: 14px; padding: 16px 0; text-align: center; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>講師管理系統</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #1a73e8;
+    --primary-hover: #1557b0;
+    --danger: #d93025;
+    --success: #188038;
+    --warning: #f29900;
+    --gray-50: #f8f9fa;
+    --gray-100: #f1f3f4;
+    --gray-200: #e8eaed;
+    --gray-400: #bdc1c6;
+    --gray-600: #80868b;
+    --gray-800: #3c4043;
+    --gray-900: #202124;
+    --border: #dadce0;
+    --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.15);
+    --radius: 8px;
+  }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-900);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* === 頂部導覽 === */
+  .topbar {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    gap: 8px;
+  }
+  .topbar-logo {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-right: 24px;
+    white-space: nowrap;
+  }
+  .nav-btn {
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--gray-800);
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { background: var(--gray-100); }
+  .nav-btn.active { background: #e8f0fe; color: var(--primary); font-weight: 500; }
+
+  /* === 主容器 === */
+  .main { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+
+  /* === 頁面 === */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* === 卡片 === */
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+
+  /* === 表單 === */
+  .form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 180px; }
+  .form-group.full { flex: 100%; min-width: 100%; }
+  .form-group label { font-size: 12px; font-weight: 500; color: var(--gray-600); }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--gray-900);
+    background: #fff;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+  .form-group textarea { resize: vertical; min-height: 72px; }
+
+  /* 銀行搜尋 */
+  .bank-search-wrap { position: relative; }
+  .bank-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: var(--shadow-lg);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 50;
+    display: none;
+  }
+  .bank-dropdown.show { display: block; }
+  .bank-option {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.1s;
+    font-size: 13px;
+  }
+  .bank-option:hover { background: var(--gray-100); }
+  .bank-option span { color: var(--gray-600); margin-right: 8px; font-size: 12px; }
+
+  /* 課程時間欄位 */
+  .course-type-fields { display: none; }
+  .course-type-fields.show { display: flex; }
+
+  /* === 按鈕 === */
+  .btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 500;
+    transition: background 0.15s, box-shadow 0.15s;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-outline { background: #fff; color: var(--primary); border: 1px solid var(--primary); }
+  .btn-outline:hover { background: #e8f0fe; }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+  .btn-danger { background: #fff; color: var(--danger); border: 1px solid var(--danger); }
+  .btn-danger:hover { background: #fce8e6; }
+  .btn-success { background: #fff; color: var(--success); border: 1px solid var(--success); }
+  .btn-success:hover { background: #e6f4ea; }
+
+  /* === 篩選列 === */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-bar .filter-label { font-size: 13px; color: var(--gray-600); }
+  .filter-chip {
+    padding: 5px 14px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--gray-800);
+    transition: all 0.15s;
+  }
+  .filter-chip:hover { border-color: var(--primary); color: var(--primary); }
+  .filter-chip.active { background: #e8f0fe; border-color: var(--primary); color: var(--primary); font-weight: 500; }
+
+  /* === 資料表格 === */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13px;
+    color: var(--gray-800);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--gray-50); }
+
+  /* === 狀態標籤 === */
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .badge-active { background: #e6f4ea; color: var(--success); }
+  .badge-inactive { background: #f1f3f4; color: var(--gray-600); }
+  .badge-regular { background: #e8f0fe; color: var(--primary); }
+  .badge-camp { background: #fce8e6; color: var(--danger); }
+  .badge-planned { background: #fef7e0; color: var(--warning); }
+  .badge-completed { background: #f1f3f4; color: var(--gray-600); }
+
+  /* === 操作按鈕區 === */
+  .action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* === 彈窗 === */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 560px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 24px;
+    position: relative;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--gray-900);
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--gray-600);
+    line-height: 1;
+    padding: 4px;
+  }
+  .modal-close:hover { color: var(--gray-900); }
+  .modal-footer { margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px; }
+
+  /* 詳細資訊區塊 */
+  .detail-section { margin-bottom: 16px; }
+  .detail-section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .detail-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
+  .detail-label { font-size: 12px; color: var(--gray-600); width: 80px; flex-shrink: 0; padding-top: 1px; }
+  .detail-value { font-size: 13px; color: var(--gray-900); flex: 1; }
+
+  /* 行內編輯 select */
+  .inline-select {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 6px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    background: #fff;
+  }
+  .inline-select:focus { outline: none; border-color: var(--primary); }
+
+  /* === 空狀態 === */
+  .empty-state { text-align: center; padding: 40px 16px; color: var(--gray-600); }
+  .empty-state-icon { font-size: 36px; margin-bottom: 8px; }
+  .empty-state p { font-size: 14px; }
+
+  /* === 載入中 === */
+  .loading { text-align: center; padding: 32px; color: var(--gray-600); font-size: 13px; }
+
+  /* === Toast 通知 === */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--gray-900);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* 分隔線 */
+  .section-sep { border: none; border-top: 1px solid var(--gray-100); margin: 16px 0; }
+
+  /* 課程 Session 區 */
+  .session-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13px;
+  }
+  .session-item:last-child { border-bottom: none; }
+
+  @media (max-width: 600px) {
+    .topbar { padding: 0 12px; }
+    .main { padding: 16px 10px; }
+    .form-group { min-width: 100%; }
+    .modal { max-width: 98vw; padding: 16px; }
+  }
+</style>
 </head>
 <body>
 
-<nav>
-  <h1>📚 講師管理系統</h1>
-  <button class="active" onclick="App.router.go('teachers', event)">講師</button>
-  <button onclick="App.router.go('courses', event)">課程</button>
-  <button onclick="App.router.go('sessions', event)">開課紀錄</button>
-</nav>
+<!-- 頂部導覽 -->
+<div class="topbar">
+  <div class="topbar-logo">📋 講師管理系統</div>
+  <button class="nav-btn active" onclick="switchPage('teachers')">講師管理</button>
+  <button class="nav-btn" onclick="switchPage('courses')">課程管理</button>
+</div>
 
-<main>
-  <!-- 講師頁面 -->
+<div class="main">
+
+  <!-- ========== 講師頁面 ========== -->
   <div class="page active" id="page-teachers">
+
+    <!-- 新增講師表單 -->
     <div class="card">
-      <h2>新增講師</h2>
+      <div class="card-title">新增講師</div>
       <div class="form-row">
-        <input id="t-name" placeholder="姓名 *" />
-        <input id="t-email" placeholder="Email *" />
-        <input id="t-phone" placeholder="電話" />
-        <input id="t-line" placeholder="Line ID（選填）" />
+        <div class="form-group">
+          <label>姓名 *</label>
+          <input type="text" id="t-name" placeholder="王小明">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="t-email" placeholder="example@email.com">
+        </div>
+        <div class="form-group">
+          <label>手機號碼</label>
+          <input type="tel" id="t-phone" placeholder="0912345678">
+        </div>
       </div>
-      <button class="btn btn-primary" onclick="App.api.createTeacher()">新增講師</button>
-      <div id="msg-teacher" class="msg"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>身分證字號</label>
+          <input type="text" id="t-id-number" placeholder="A123456789">
+        </div>
+        <div class="form-group">
+          <label>生日</label>
+          <input type="date" id="t-birthday">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>地址</label>
+          <input type="text" id="t-address" placeholder="台北市中正區...">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>銀行代碼</label>
+          <div class="bank-search-wrap">
+            <input type="text" id="t-bank-search" placeholder="輸入銀行名稱或代碼搜尋" autocomplete="off" oninput="filterBanks()" onfocus="showBankDropdown()" onblur="hideBankDropdown()">
+            <input type="hidden" id="t-bank-code">
+            <div class="bank-dropdown" id="bank-dropdown"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>銀行帳號</label>
+          <input type="text" id="t-bank-account" placeholder="帳號數字">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>備註</label>
+          <textarea id="t-note" placeholder="其他備註..."></textarea>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+        <button class="btn btn-primary" onclick="createTeacher()">新增講師</button>
+      </div>
     </div>
+
+    <!-- 講師清單 -->
     <div class="card">
-      <h2>講師清單</h2>
-      <div id="table-teachers" class="loading">載入中...</div>
+      <div class="card-title">講師清單</div>
+      <div class="filter-bar">
+        <span class="filter-label">篩選：</span>
+        <button class="filter-chip active" onclick="filterTeachers('all', this)">全部</button>
+        <button class="filter-chip" onclick="filterTeachers('active', this)">在職</button>
+        <button class="filter-chip" onclick="filterTeachers('inactive', this)">離職</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>姓名</th>
+              <th>Email</th>
+              <th>手機</th>
+              <th>狀態</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="teacher-list">
+            <tr><td colspan="5" class="loading">載入中...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
-  <!-- 課程頁面 -->
+  <!-- ========== 課程頁面 ========== -->
   <div class="page" id="page-courses">
+
+    <!-- 新增課程表單 -->
     <div class="card">
-      <h2>新增課程</h2>
+      <div class="card-title">新增課程</div>
       <div class="form-row">
-        <input id="c-name" placeholder="課程名稱 *" />
+        <div class="form-group">
+          <label>課程名稱 *</label>
+          <input type="text" id="c-name" placeholder="Scratch、Python...">
+        </div>
+        <div class="form-group">
+          <label>課程類型 *</label>
+          <select id="c-type" onchange="onCourseTypeChange()">
+            <option value="">請選擇</option>
+            <option value="regular">常態班</option>
+            <option value="camp">營隊</option>
+          </select>
+        </div>
       </div>
-      <button class="btn btn-primary" onclick="App.api.createCourse()">新增課程</button>
-      <div id="msg-course" class="msg"></div>
+
+      <!-- 常態班欄位 -->
+      <div class="form-row course-type-fields" id="regular-fields">
+        <div class="form-group">
+          <label>上課星期</label>
+          <select id="c-weekday">
+            <option value="">請選擇</option>
+            <option value="1">週一</option>
+            <option value="2">週二</option>
+            <option value="3">週三</option>
+            <option value="4">週四</option>
+            <option value="5">週五</option>
+            <option value="6">週六</option>
+            <option value="0">週日</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>開始時間</label>
+          <input type="time" id="c-time-start">
+        </div>
+        <div class="form-group">
+          <label>結束時間</label>
+          <input type="time" id="c-time-end">
+        </div>
+      </div>
+
+      <!-- 營隊欄位 -->
+      <div class="form-row course-type-fields" id="camp-fields">
+        <div class="form-group">
+          <label>開始日期</label>
+          <input type="date" id="c-date-start">
+        </div>
+        <div class="form-group">
+          <label>結束日期</label>
+          <input type="date" id="c-date-end">
+        </div>
+        <div class="form-group">
+          <label>每日開始時間</label>
+          <input type="time" id="c-camp-time-start">
+        </div>
+        <div class="form-group">
+          <label>每日結束時間</label>
+          <input type="time" id="c-camp-time-end">
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+        <button class="btn btn-primary" onclick="createCourse()">新增課程</button>
+      </div>
     </div>
+
+    <!-- 課程清單 -->
     <div class="card">
-      <h2>課程清單</h2>
-      <div id="table-courses" class="loading">載入中...</div>
+      <div class="card-title">課程清單</div>
+      <div class="filter-bar">
+        <span class="filter-label">篩選：</span>
+        <button class="filter-chip active" onclick="filterCourses('all', this)">全部</button>
+        <button class="filter-chip" onclick="filterCourses('regular', this)">常態班</button>
+        <button class="filter-chip" onclick="filterCourses('camp', this)">營隊</button>
+        <button class="filter-chip" onclick="filterCourses('active', this)">上課中</button>
+        <button class="filter-chip" onclick="filterCourses('inactive', this)">已結束</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>課程名稱</th>
+              <th>類型</th>
+              <th>時間</th>
+              <th>授課講師</th>
+              <th>狀態</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="course-list">
+            <tr><td colspan="6" class="loading">載入中...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
-  <!-- 開課紀錄頁面 -->
-  <div class="page" id="page-sessions">
-    <div class="card">
-      <h2>新增開課紀錄</h2>
-      <div class="form-row">
-        <select id="s-type">
-          <option value="regular">常態班</option>
-          <option value="camp">營隊</option>
-        </select>
-        <input id="s-course" placeholder="課程名稱" />
-        <input id="s-teacher" placeholder="講師姓名" />
-      </div>
-      <div class="form-row">
-        <input id="s-date" placeholder="日期（如：週三 或 2026-07-01）" />
-        <input id="s-start" placeholder="開始時間（如：14:00）" />
-        <input id="s-end" placeholder="結束時間（如：16:00）" />
-      </div>
-      <button class="btn btn-primary" onclick="App.api.createSession()">新增紀錄</button>
-      <div id="msg-session" class="msg"></div>
-    </div>
-    <div class="card">
-      <h2>開課紀錄清單</h2>
-      <div id="table-sessions" class="loading">載入中...</div>
+</div>
+
+<!-- ========== 講師詳細/編輯彈窗 ========== -->
+<div class="modal-overlay" id="teacher-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('teacher-modal')">✕</button>
+    <div class="modal-title" id="teacher-modal-title">講師詳細資料</div>
+    <div id="teacher-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('teacher-modal')">關閉</button>
+      <button class="btn btn-primary" id="teacher-modal-save-btn" onclick="saveTeacher()" style="display:none">儲存變更</button>
     </div>
   </div>
-</main>
+</div>
+
+<!-- ========== 課程詳細/編輯彈窗 ========== -->
+<div class="modal-overlay" id="course-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('course-modal')">✕</button>
+    <div class="modal-title" id="course-modal-title">課程詳細資料</div>
+    <div id="course-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('course-modal')">關閉</button>
+      <button class="btn btn-primary" id="course-modal-save-btn" onclick="saveCourse()" style="display:none">儲存變更</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
 
 <script>
-  // Apps Script 網頁應用程式網址
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-BbbcHTd1LgkcdcgBvHosN9OtgxuojIArBj2E9GrVaHsgAm6b22rVcXbBdHZpWlZ_mA/exec';
+// ============================================================
+// 設定
+// ============================================================
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-BbbcHTd1LgkcdcgBvHosN9OtgxuojIArBj2E9GrVaHsgAm6b22rVcXbBdHZpWlZ_mA/exec';
 
-  const App = { state: { teachers: [], courses: [], sessions: [] }, api: {}, ui: {}, router: {} };
+// 台灣銀行清單
+const BANKS = [
+  {code:'004',name:'台灣銀行'},{code:'005',name:'土地銀行'},{code:'006',name:'合作金庫銀行'},
+  {code:'007',name:'第一銀行'},{code:'008',name:'華南銀行'},{code:'009',name:'彰化銀行'},
+  {code:'011',name:'上海商銀'},{code:'012',name:'台北富邦銀行'},{code:'013',name:'國泰世華銀行'},
+  {code:'016',name:'高雄銀行'},{code:'017',name:'兆豐銀行'},{code:'018',name:'農業金庫'},
+  {code:'020',name:'瑞興銀行'},{code:'021',name:'花旗銀行'},{code:'022',name:'美國銀行'},
+  {code:'050',name:'台灣企銀'},{code:'052',name:'渣打銀行'},{code:'053',name:'台中銀行'},
+  {code:'054',name:'京城銀行'},{code:'072',name:'德意志銀行'},{code:'075',name:'東亞銀行'},
+  {code:'081',name:'匯豐銀行'},{code:'082',name:'澳盛銀行'},{code:'101',name:'瑞穗銀行'},
+  {code:'102',name:'三井住友銀行'},{code:'103',name:'日本大和Next銀行'},{code:'108',name:'摩根大通'},
+  {code:'118',name:'荷蘭銀行'},{code:'147',name:'三信商銀'},{code:'151',name:'新光銀行'},
+  {code:'152',name:'日盛銀行'},{code:'153',name:'台新銀行'},{code:'154',name:'京城商銀'},
+  {code:'158',name:'富邦銀行'},{code:'161',name:'中華銀行'},{code:'162',name:'台灣工業銀行'},
+  {code:'163',name:'玉山銀行'},{code:'165',name:'安泰銀行'},{code:'注意',name:'---信用合作社---'},
+  {code:'201',name:'基隆一信'},{code:'202',name:'基隆二信'},{code:'203',name:'基隆三信'},
+  {code:'注意',name:'---農漁會信用部---'},
+  {code:'700',name:'中華郵政'},{code:'805',name:'遠東銀行'},{code:'806',name:'元大銀行'},
+  {code:'807',name:'永豐銀行'},{code:'808',name:'玉山銀行(舊)'},{code:'809',name:'凱基銀行'},
+  {code:'810',name:'星展銀行'},{code:'812',name:'台新銀行(舊)'},{code:'816',name:'安泰銀行(舊)'},
+  {code:'822',name:'中國信託'}
+].filter(b => !b.name.startsWith('---'));
 
-  // 路由：切換頁面
-  App.router.go = function(page, e) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById('page-' + page).classList.add('active');
-    if (e && e.target) e.target.classList.add('active');
-    if (page === 'teachers') App.api.getTeachers();
-    if (page === 'courses') App.api.getCourses();
-    if (page === 'sessions') App.api.getSessions();
-  };
+// ============================================================
+// 全域狀態
+// ============================================================
+let allTeachers = [];
+let allCourses = [];
+let teacherFilter = 'all';
+let courseFilter = 'all';
+let currentEditTeacher = null;
+let currentEditCourse = null;
 
-  // 共用 JSONP 呼叫函式
-  // JSONP 原理：動態插入 script 標籤，繞過瀏覽器跨域限制
-  App.api.call = function(action, payload) {
-    payload = payload || {};
-    return new Promise(function(resolve, reject) {
-      // 產生唯一的 callback 名稱
-      var cbName = 'cb' + Date.now() + Math.floor(Math.random() * 1000);
+// ============================================================
+// JSONP API
+// ============================================================
+const App = { _cbs: {} };
+App.call = function(action, payload) {
+  return new Promise(function(resolve, reject) {
+    const cbName = 'cb_' + Date.now() + '_' + Math.random().toString(36).substr(2,5);
+    const timer = setTimeout(() => { delete window[cbName]; reject(new Error('timeout')); }, 15000);
+    window[cbName] = function(data) {
+      clearTimeout(timer);
+      delete window[cbName];
+      resolve(data);
+    };
+    const script = document.createElement('script');
+    script.onerror = () => { clearTimeout(timer); reject(new Error('network error')); };
+    script.src = SCRIPT_URL + '?data=' + encodeURIComponent(JSON.stringify({ action, payload })) + '&callback=' + cbName;
+    document.body.appendChild(script);
+    script.addEventListener('load', () => { setTimeout(() => script.remove(), 1000); });
+  });
+};
 
-      // 把 callback 函式掛到 window 上
-      window[cbName] = function(data) {
-        resolve(data);
-        delete window[cbName];
-        var el = document.getElementById(cbName);
-        if (el) el.remove();
-      };
+// ============================================================
+// Toast
+// ============================================================
+function showToast(msg, duration = 2500) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), duration);
+}
 
-      // 組合網址並插入 script 標籤
-      var params = encodeURIComponent(JSON.stringify({ action: action, payload: payload }));
-      var url = SCRIPT_URL + '?data=' + params + '&callback=' + cbName;
-      var script = document.createElement('script');
-      script.id = cbName;
-      script.src = url;
-      script.onerror = function() {
-        reject(new Error('請求失敗'));
-        delete window[cbName];
-        if (script.parentNode) script.remove();
-      };
-      document.body.appendChild(script);
-    });
-  };
+// ============================================================
+// 頁面切換
+// ============================================================
+function switchPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
 
-  // 顯示提示訊息，3秒後自動消失
-  App.ui.showMsg = function(id, text, type) {
-    var el = document.getElementById(id);
-    el.textContent = text;
-    el.className = 'msg msg-' + type;
-    setTimeout(function() { el.className = 'msg'; }, 3000);
-  };
+// ============================================================
+// 彈窗
+// ============================================================
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
-  // 取得講師清單
-  App.api.getTeachers = async function() {
-    var result = await App.api.call('getTeachers');
-    App.state.teachers = result.data || [];
-    var el = document.getElementById('table-teachers');
-    if (!result.success || !result.data || result.data.length === 0) {
-      el.innerHTML = '<p class="loading">尚無講師資料</p>';
-      return;
+// ============================================================
+// 銀行搜尋
+// ============================================================
+function filterBanks() {
+  const q = document.getElementById('t-bank-search').value.toLowerCase();
+  const list = q ? BANKS.filter(b => b.code.includes(q) || b.name.includes(q)) : BANKS;
+  renderBankDropdown(list);
+}
+
+function renderBankDropdown(list) {
+  const dd = document.getElementById('bank-dropdown');
+  dd.innerHTML = list.slice(0, 30).map(b =>
+    `<div class="bank-option" onmousedown="selectBank('${b.code}','${b.name}')"><span>${b.code}</span>${b.name}</div>`
+  ).join('');
+  dd.classList.add('show');
+}
+
+function showBankDropdown() { renderBankDropdown(BANKS.slice(0, 30)); }
+function hideBankDropdown() { setTimeout(() => document.getElementById('bank-dropdown').classList.remove('show'), 200); }
+
+function selectBank(code, name) {
+  document.getElementById('t-bank-search').value = `${code} ${name}`;
+  document.getElementById('t-bank-code').value = code;
+  document.getElementById('bank-dropdown').classList.remove('show');
+}
+
+// ============================================================
+// 課程類型切換
+// ============================================================
+function onCourseTypeChange() {
+  const type = document.getElementById('c-type').value;
+  document.getElementById('regular-fields').classList.toggle('show', type === 'regular');
+  document.getElementById('camp-fields').classList.toggle('show', type === 'camp');
+}
+
+// ============================================================
+// 工具函式
+// ============================================================
+const WEEKDAY_MAP = { '0':'週日','1':'週一','2':'週二','3':'週三','4':'週四','5':'週五','6':'週六' };
+
+function formatWeekday(val) { return WEEKDAY_MAP[String(val)] || ''; }
+
+function formatCourseTime(c) {
+  if (c.type === 'regular') {
+    const wd = formatWeekday(c.weekday);
+    const ts = c.time_start || '';
+    const te = c.time_end || '';
+    return [wd, ts && te ? `${ts}–${te}` : ''].filter(Boolean).join(' ');
+  } else if (c.type === 'camp') {
+    const ds = c.date_start || '';
+    const de = c.date_end || '';
+    const ts = c.time_start || '';
+    const te = c.time_end || '';
+    let s = ds && de ? `${ds} ~ ${de}` : '';
+    if (ts && te) s += ` ${ts}–${te}`;
+    return s;
+  }
+  return '';
+}
+
+function getTeacherName(id) {
+  const t = allTeachers.find(t => t.id === id);
+  return t ? t.name : (id ? '(未知)' : '—');
+}
+
+// ============================================================
+// ===== 講師 =====
+// ============================================================
+async function loadTeachers() {
+  try {
+    const res = await App.call('getTeachers');
+    if (res.success) {
+      allTeachers = res.data;
+      renderTeacherList();
     }
-    el.innerHTML = '<table><thead><tr><th>姓名</th><th>Email</th><th>電話</th><th>Line ID</th><th>狀態</th></tr></thead><tbody>' +
-      result.data.map(function(t) {
-        return '<tr><td>' + t.name + '</td><td>' + t.email + '</td><td>' + t.phone + '</td><td>' + (t.line_id || '-') + '</td><td><span class="badge badge-' + t.status + '">' + (t.status === 'active' ? '在職' : '離職') + '</span></td></tr>';
-      }).join('') + '</tbody></table>';
-  };
+  } catch(e) { showToast('載入講師失敗'); }
+}
 
-  // 新增講師
-  App.api.createTeacher = async function() {
-    var name = document.getElementById('t-name').value.trim();
-    var email = document.getElementById('t-email').value.trim();
-    if (!name || !email) { App.ui.showMsg('msg-teacher', '姓名和 Email 為必填！', 'error'); return; }
-    var result = await App.api.call('createTeacher', {
-      name: name, email: email,
-      phone: document.getElementById('t-phone').value.trim(),
-      line_id: document.getElementById('t-line').value.trim()
-    });
-    if (result.success) {
-      App.ui.showMsg('msg-teacher', '新增成功！', 'success');
-      document.getElementById('t-name').value = '';
-      document.getElementById('t-email').value = '';
-      document.getElementById('t-phone').value = '';
-      document.getElementById('t-line').value = '';
-      App.api.getTeachers();
-    } else {
-      App.ui.showMsg('msg-teacher', '新增失敗：' + result.error, 'error');
+function renderTeacherList() {
+  const tbody = document.getElementById('teacher-list');
+  let data = allTeachers;
+  if (teacherFilter === 'active') data = data.filter(t => t.status === 'active');
+  else if (teacherFilter === 'inactive') data = data.filter(t => t.status === 'inactive');
+
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">👤</div><p>尚無講師資料</p></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = data.map(t => `
+    <tr>
+      <td><strong>${t.name}</strong></td>
+      <td>${t.email || '—'}</td>
+      <td>${t.phone || '—'}</td>
+      <td><span class="badge badge-${t.status === 'active' ? 'active' : 'inactive'}">${t.status === 'active' ? '在職' : '離職'}</span></td>
+      <td>
+        <div class="action-btns">
+          <button class="btn btn-sm btn-outline" onclick="openTeacherDetail('${t.id}')">詳細</button>
+          <button class="btn btn-sm btn-outline" onclick="openTeacherEdit('${t.id}')">編輯</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterTeachers(status, el) {
+  teacherFilter = status;
+  document.querySelectorAll('#page-teachers .filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderTeacherList();
+}
+
+// 查看詳細（含敏感資訊）
+function openTeacherDetail(id) {
+  const t = allTeachers.find(t => t.id === id);
+  if (!t) return;
+  document.getElementById('teacher-modal-title').textContent = `${t.name} — 詳細資料`;
+  document.getElementById('teacher-modal-save-btn').style.display = 'none';
+  document.getElementById('teacher-modal-body').innerHTML = `
+    <div class="detail-section">
+      <div class="detail-section-title">基本資訊</div>
+      <div class="detail-row"><span class="detail-label">姓名</span><span class="detail-value">${t.name || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${t.email || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">手機</span><span class="detail-value">${t.phone || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">狀態</span><span class="detail-value"><span class="badge badge-${t.status === 'active' ? 'active' : 'inactive'}">${t.status === 'active' ? '在職' : '離職'}</span></span></div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">🔒 敏感資訊</div>
+      <div class="detail-row"><span class="detail-label">身分證字號</span><span class="detail-value">${t.id_number || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">生日</span><span class="detail-value">${t.birthday || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">地址</span><span class="detail-value">${t.address || '—'}</span></div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">🏦 銀行資訊</div>
+      <div class="detail-row"><span class="detail-label">銀行代碼</span><span class="detail-value">${t.bank_code ? `${t.bank_code} ${getBankName(t.bank_code)}` : '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">銀行帳號</span><span class="detail-value">${t.bank_account || '—'}</span></div>
+    </div>
+    ${t.note ? `<div class="detail-section"><div class="detail-section-title">備註</div><div style="font-size:13px;color:var(--gray-800);line-height:1.6">${t.note}</div></div>` : ''}
+  `;
+  openModal('teacher-modal');
+}
+
+function getBankName(code) {
+  const b = BANKS.find(b => b.code === String(code));
+  return b ? b.name : '';
+}
+
+// 編輯講師
+function openTeacherEdit(id) {
+  const t = allTeachers.find(t => t.id === id);
+  if (!t) return;
+  currentEditTeacher = t;
+  document.getElementById('teacher-modal-title').textContent = `編輯講師 — ${t.name}`;
+  document.getElementById('teacher-modal-save-btn').style.display = '';
+
+  const bankDisplay = t.bank_code ? `${t.bank_code} ${getBankName(t.bank_code)}` : '';
+
+  document.getElementById('teacher-modal-body').innerHTML = `
+    <div class="form-row">
+      <div class="form-group"><label>姓名 *</label><input type="text" id="e-name" value="${t.name || ''}"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="e-email" value="${t.email || ''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>手機號碼</label><input type="tel" id="e-phone" value="${t.phone || ''}"></div>
+      <div class="form-group">
+        <label>狀態</label>
+        <select id="e-status">
+          <option value="active" ${t.status === 'active' ? 'selected' : ''}>在職</option>
+          <option value="inactive" ${t.status === 'inactive' ? 'selected' : ''}>離職</option>
+        </select>
+      </div>
+    </div>
+    <hr class="section-sep">
+    <div class="form-row">
+      <div class="form-group"><label>身分證字號</label><input type="text" id="e-id-number" value="${t.id_number || ''}"></div>
+      <div class="form-group"><label>生日</label><input type="date" id="e-birthday" value="${t.birthday || ''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group full"><label>地址</label><input type="text" id="e-address" value="${t.address || ''}"></div>
+    </div>
+    <hr class="section-sep">
+    <div class="form-row">
+      <div class="form-group">
+        <label>銀行代碼</label>
+        <div class="bank-search-wrap">
+          <input type="text" id="e-bank-search" value="${bankDisplay}" placeholder="輸入銀行名稱或代碼搜尋" autocomplete="off"
+            oninput="filterBanksEdit()" onfocus="showBankDropdownEdit()" onblur="hideBankDropdownEdit()">
+          <input type="hidden" id="e-bank-code" value="${t.bank_code || ''}">
+          <div class="bank-dropdown" id="bank-dropdown-edit"></div>
+        </div>
+      </div>
+      <div class="form-group"><label>銀行帳號</label><input type="text" id="e-bank-account" value="${t.bank_account || ''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group full"><label>備註</label><textarea id="e-note">${t.note || ''}</textarea></div>
+    </div>
+  `;
+  openModal('teacher-modal');
+}
+
+// 編輯彈窗內的銀行搜尋
+function filterBanksEdit() {
+  const q = document.getElementById('e-bank-search').value.toLowerCase();
+  const list = q ? BANKS.filter(b => b.code.includes(q) || b.name.includes(q)) : BANKS;
+  const dd = document.getElementById('bank-dropdown-edit');
+  dd.innerHTML = list.slice(0, 30).map(b =>
+    `<div class="bank-option" onmousedown="selectBankEdit('${b.code}','${b.name}')"><span>${b.code}</span>${b.name}</div>`
+  ).join('');
+  dd.classList.add('show');
+}
+function showBankDropdownEdit() {
+  filterBanksEdit();
+  document.getElementById('bank-dropdown-edit').classList.add('show');
+}
+function hideBankDropdownEdit() { setTimeout(() => { const dd = document.getElementById('bank-dropdown-edit'); if(dd) dd.classList.remove('show'); }, 200); }
+function selectBankEdit(code, name) {
+  document.getElementById('e-bank-search').value = `${code} ${name}`;
+  document.getElementById('e-bank-code').value = code;
+  document.getElementById('bank-dropdown-edit').classList.remove('show');
+}
+
+async function saveTeacher() {
+  if (!currentEditTeacher) return;
+  const payload = {
+    id: currentEditTeacher.id,
+    name: document.getElementById('e-name').value.trim(),
+    email: document.getElementById('e-email').value.trim(),
+    phone: document.getElementById('e-phone').value.trim(),
+    status: document.getElementById('e-status').value,
+    id_number: document.getElementById('e-id-number').value.trim(),
+    birthday: document.getElementById('e-birthday').value,
+    address: document.getElementById('e-address').value.trim(),
+    bank_code: document.getElementById('e-bank-code').value,
+    bank_account: document.getElementById('e-bank-account').value.trim(),
+    note: document.getElementById('e-note').value.trim()
+  };
+  if (!payload.name) { showToast('請輸入姓名'); return; }
+  try {
+    const res = await App.call('updateTeacher', payload);
+    if (res.success) {
+      showToast('✓ 講師資料已更新');
+      closeModal('teacher-modal');
+      await loadTeachers();
+    } else { showToast('更新失敗：' + res.error); }
+  } catch(e) { showToast('更新失敗，請稍後再試'); }
+}
+
+async function createTeacher() {
+  const name = document.getElementById('t-name').value.trim();
+  if (!name) { showToast('請輸入姓名'); return; }
+  const payload = {
+    name,
+    email: document.getElementById('t-email').value.trim(),
+    phone: document.getElementById('t-phone').value.trim(),
+    id_number: document.getElementById('t-id-number').value.trim(),
+    birthday: document.getElementById('t-birthday').value,
+    address: document.getElementById('t-address').value.trim(),
+    bank_code: document.getElementById('t-bank-code').value,
+    bank_account: document.getElementById('t-bank-account').value.trim(),
+    note: document.getElementById('t-note').value.trim()
+  };
+  try {
+    const res = await App.call('createTeacher', payload);
+    if (res.success) {
+      showToast('✓ 已新增講師：' + name);
+      // 清空表單
+      ['t-name','t-email','t-phone','t-id-number','t-birthday','t-address','t-bank-search','t-bank-code','t-bank-account','t-note'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      await loadTeachers();
+    } else { showToast('新增失敗：' + res.error); }
+  } catch(e) { showToast('新增失敗，請稍後再試'); }
+}
+
+// ============================================================
+// ===== 課程 =====
+// ============================================================
+async function loadCourses() {
+  try {
+    const res = await App.call('getCourses');
+    if (res.success) {
+      allCourses = res.data;
+      renderCourseList();
     }
+  } catch(e) { showToast('載入課程失敗'); }
+}
+
+function renderCourseList() {
+  const tbody = document.getElementById('course-list');
+  let data = allCourses;
+  if (courseFilter === 'regular') data = data.filter(c => c.type === 'regular');
+  else if (courseFilter === 'camp') data = data.filter(c => c.type === 'camp');
+  else if (courseFilter === 'active') data = data.filter(c => c.status === 'active');
+  else if (courseFilter === 'inactive') data = data.filter(c => c.status === 'inactive');
+
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">📚</div><p>尚無課程資料</p></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = data.map(c => {
+    // 找這門課的 Sessions，取得老師
+    const timeStr = formatCourseTime(c);
+    const typeLabel = c.type === 'regular' ? '常態班' : c.type === 'camp' ? '營隊' : '—';
+    const typeBadge = c.type === 'regular' ? 'badge-regular' : 'badge-camp';
+    const statusLabel = c.status === 'active' ? '上課中' : '已結束';
+    const statusBadge = c.status === 'active' ? 'badge-active' : 'badge-inactive';
+
+    return `
+    <tr>
+      <td><strong>${c.name}</strong></td>
+      <td><span class="badge ${typeBadge}">${typeLabel}</span></td>
+      <td style="font-size:12px;color:var(--gray-600)">${timeStr || '—'}</td>
+      <td>
+        <select class="inline-select" onchange="updateCourseTeacher('${c.id}', this.value)" id="teacher-select-${c.id}">
+          <option value="">— 指定講師 —</option>
+          ${allTeachers.filter(t => t.status === 'active').map(t => `<option value="${t.id}">${t.name}</option>`).join('')}
+        </select>
+      </td>
+      <td>
+        <select class="inline-select" onchange="updateCourseStatus('${c.id}', this.value)">
+          <option value="active" ${c.status === 'active' ? 'selected' : ''}>上課中</option>
+          <option value="inactive" ${c.status === 'inactive' ? 'selected' : ''}>已結束</option>
+        </select>
+      </td>
+      <td>
+        <div class="action-btns">
+          <button class="btn btn-sm btn-outline" onclick="openCourseDetail('${c.id}')">詳細</button>
+          <button class="btn btn-sm btn-outline" onclick="openCourseEdit('${c.id}')">編輯</button>
+        </div>
+      </td>
+    </tr>
+    `;
+  }).join('');
+}
+
+function filterCourses(val, el) {
+  courseFilter = val;
+  document.querySelectorAll('#page-courses .filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderCourseList();
+}
+
+async function updateCourseStatus(id, status) {
+  try {
+    const res = await App.call('updateCourse', { id, status });
+    if (res.success) {
+      const c = allCourses.find(c => c.id === id);
+      if (c) c.status = status;
+      showToast('✓ 狀態已更新');
+    } else { showToast('更新失敗'); }
+  } catch(e) { showToast('更新失敗'); }
+}
+
+async function updateCourseTeacher(courseId, teacherId) {
+  if (!teacherId) return;
+  // 新增一筆 Session 記錄
+  try {
+    const c = allCourses.find(c => c.id === courseId);
+    const payload = {
+      type: c ? c.type : 'regular',
+      course_id: courseId,
+      teacher_id: teacherId,
+      date: '',
+      time_start: c ? (c.time_start || '') : '',
+      time_end: c ? (c.time_end || '') : '',
+      note: '由課程管理指定'
+    };
+    const res = await App.call('createSession', payload);
+    if (res.success) {
+      showToast('✓ 已指定授課講師：' + getTeacherName(teacherId));
+    } else { showToast('指定失敗'); }
+  } catch(e) { showToast('指定失敗'); }
+}
+
+function openCourseDetail(id) {
+  const c = allCourses.find(c => c.id === id);
+  if (!c) return;
+  document.getElementById('course-modal-title').textContent = `${c.name} — 詳細資料`;
+  document.getElementById('course-modal-save-btn').style.display = 'none';
+  const typeLabel = c.type === 'regular' ? '常態班' : c.type === 'camp' ? '營隊' : '—';
+  const timeStr = formatCourseTime(c);
+
+  document.getElementById('course-modal-body').innerHTML = `
+    <div class="detail-section">
+      <div class="detail-section-title">課程資訊</div>
+      <div class="detail-row"><span class="detail-label">課程名稱</span><span class="detail-value">${c.name}</span></div>
+      <div class="detail-row"><span class="detail-label">類型</span><span class="detail-value">${typeLabel}</span></div>
+      <div class="detail-row"><span class="detail-label">時間</span><span class="detail-value">${timeStr || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">狀態</span><span class="detail-value"><span class="badge badge-${c.status === 'active' ? 'active' : 'inactive'}">${c.status === 'active' ? '上課中' : '已結束'}</span></span></div>
+    </div>
+  `;
+  openModal('course-modal');
+}
+
+function openCourseEdit(id) {
+  const c = allCourses.find(c => c.id === id);
+  if (!c) return;
+  currentEditCourse = c;
+  document.getElementById('course-modal-title').textContent = `編輯課程 — ${c.name}`;
+  document.getElementById('course-modal-save-btn').style.display = '';
+
+  document.getElementById('course-modal-body').innerHTML = `
+    <div class="form-row">
+      <div class="form-group"><label>課程名稱 *</label><input type="text" id="ec-name" value="${c.name || ''}"></div>
+      <div class="form-group">
+        <label>課程類型</label>
+        <select id="ec-type" onchange="onEditCourseTypeChange()">
+          <option value="regular" ${c.type === 'regular' ? 'selected' : ''}>常態班</option>
+          <option value="camp" ${c.type === 'camp' ? 'selected' : ''}>營隊</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row course-type-fields ${c.type === 'regular' ? 'show' : ''}" id="ec-regular-fields">
+      <div class="form-group">
+        <label>上課星期</label>
+        <select id="ec-weekday">
+          <option value="">請選擇</option>
+          ${['','1','2','3','4','5','6','0'].slice(1).map(v => `<option value="${v}" ${String(c.weekday) === v ? 'selected' : ''}>${WEEKDAY_MAP[v]}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label>開始時間</label><input type="time" id="ec-time-start" value="${c.time_start || ''}"></div>
+      <div class="form-group"><label>結束時間</label><input type="time" id="ec-time-end" value="${c.time_end || ''}"></div>
+    </div>
+    <div class="form-row course-type-fields ${c.type === 'camp' ? 'show' : ''}" id="ec-camp-fields">
+      <div class="form-group"><label>開始日期</label><input type="date" id="ec-date-start" value="${c.date_start || ''}"></div>
+      <div class="form-group"><label>結束日期</label><input type="date" id="ec-date-end" value="${c.date_end || ''}"></div>
+      <div class="form-group"><label>每日開始時間</label><input type="time" id="ec-camp-time-start" value="${c.time_start || ''}"></div>
+      <div class="form-group"><label>每日結束時間</label><input type="time" id="ec-camp-time-end" value="${c.time_end || ''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>狀態</label>
+        <select id="ec-status">
+          <option value="active" ${c.status === 'active' ? 'selected' : ''}>上課中</option>
+          <option value="inactive" ${c.status === 'inactive' ? 'selected' : ''}>已結束</option>
+        </select>
+      </div>
+    </div>
+  `;
+  openModal('course-modal');
+}
+
+function onEditCourseTypeChange() {
+  const type = document.getElementById('ec-type').value;
+  document.getElementById('ec-regular-fields').classList.toggle('show', type === 'regular');
+  document.getElementById('ec-camp-fields').classList.toggle('show', type === 'camp');
+}
+
+async function saveCourse() {
+  if (!currentEditCourse) return;
+  const type = document.getElementById('ec-type').value;
+  const payload = {
+    id: currentEditCourse.id,
+    name: document.getElementById('ec-name').value.trim(),
+    type,
+    status: document.getElementById('ec-status').value,
+    weekday: type === 'regular' ? (document.getElementById('ec-weekday').value) : '',
+    time_start: type === 'regular'
+      ? document.getElementById('ec-time-start').value
+      : document.getElementById('ec-camp-time-start').value,
+    time_end: type === 'regular'
+      ? document.getElementById('ec-time-end').value
+      : document.getElementById('ec-camp-time-end').value,
+    date_start: type === 'camp' ? document.getElementById('ec-date-start').value : '',
+    date_end: type === 'camp' ? document.getElementById('ec-date-end').value : ''
+  };
+  if (!payload.name) { showToast('請輸入課程名稱'); return; }
+  try {
+    const res = await App.call('updateCourse', payload);
+    if (res.success) {
+      showToast('✓ 課程已更新');
+      closeModal('course-modal');
+      await loadCourses();
+    } else { showToast('更新失敗：' + res.error); }
+  } catch(e) { showToast('更新失敗，請稍後再試'); }
+}
+
+async function createCourse() {
+  const name = document.getElementById('c-name').value.trim();
+  const type = document.getElementById('c-type').value;
+  if (!name) { showToast('請輸入課程名稱'); return; }
+  if (!type) { showToast('請選擇課程類型'); return; }
+
+  const payload = {
+    name, type,
+    weekday: type === 'regular' ? document.getElementById('c-weekday').value : '',
+    time_start: type === 'regular'
+      ? document.getElementById('c-time-start').value
+      : document.getElementById('c-camp-time-start').value,
+    time_end: type === 'regular'
+      ? document.getElementById('c-time-end').value
+      : document.getElementById('c-camp-time-end').value,
+    date_start: type === 'camp' ? document.getElementById('c-date-start').value : '',
+    date_end: type === 'camp' ? document.getElementById('c-date-end').value : ''
   };
 
-  // 取得課程清單
-  App.api.getCourses = async function() {
-    var result = await App.api.call('getCourses');
-    App.state.courses = result.data || [];
-    var el = document.getElementById('table-courses');
-    if (!result.success || !result.data || result.data.length === 0) {
-      el.innerHTML = '<p class="loading">尚無課程資料</p>';
-      return;
-    }
-    el.innerHTML = '<table><thead><tr><th>課程名稱</th><th>狀態</th><th>建立時間</th></tr></thead><tbody>' +
-      result.data.map(function(c) {
-        return '<tr><td>' + c.name + '</td><td><span class="badge badge-' + c.status + '">' + (c.status === 'active' ? '開放' : '停用') + '</span></td><td>' + (c.created_at ? c.created_at.slice(0,10) : '-') + '</td></tr>';
-      }).join('') + '</tbody></table>';
-  };
+  try {
+    const res = await App.call('createCourse', payload);
+    if (res.success) {
+      showToast('✓ 已新增課程：' + name);
+      ['c-name','c-weekday','c-time-start','c-time-end','c-date-start','c-date-end','c-camp-time-start','c-camp-time-end'].forEach(id => {
+        const el = document.getElementById(id); if(el) el.value = '';
+      });
+      document.getElementById('c-type').value = '';
+      document.getElementById('regular-fields').classList.remove('show');
+      document.getElementById('camp-fields').classList.remove('show');
+      await loadCourses();
+    } else { showToast('新增失敗：' + res.error); }
+  } catch(e) { showToast('新增失敗，請稍後再試'); }
+}
 
-  // 新增課程
-  App.api.createCourse = async function() {
-    var name = document.getElementById('c-name').value.trim();
-    if (!name) { App.ui.showMsg('msg-course', '課程名稱為必填！', 'error'); return; }
-    var result = await App.api.call('createCourse', { name: name });
-    if (result.success) {
-      App.ui.showMsg('msg-course', '新增成功！', 'success');
-      document.getElementById('c-name').value = '';
-      App.api.getCourses();
-    } else {
-      App.ui.showMsg('msg-course', '新增失敗：' + result.error, 'error');
-    }
-  };
-
-  // 取得開課紀錄清單
-  App.api.getSessions = async function() {
-    var result = await App.api.call('getSessions');
-    App.state.sessions = result.data || [];
-    var el = document.getElementById('table-sessions');
-    if (!result.success || !result.data || result.data.length === 0) {
-      el.innerHTML = '<p class="loading">尚無開課紀錄</p>';
-      return;
-    }
-    el.innerHTML = '<table><thead><tr><th>類型</th><th>課程</th><th>講師</th><th>日期</th><th>時間</th><th>狀態</th></tr></thead><tbody>' +
-      result.data.map(function(s) {
-        return '<tr><td>' + (s.type === 'regular' ? '常態班' : '營隊') + '</td><td>' + s.course_id + '</td><td>' + s.teacher_id + '</td><td>' + s.date + '</td><td>' + s.time_start + ' - ' + s.time_end + '</td><td><span class="badge badge-active">' + s.status + '</span></td></tr>';
-      }).join('') + '</tbody></table>';
-  };
-
-  // 新增開課紀錄
-  App.api.createSession = async function() {
-    var result = await App.api.call('createSession', {
-      type: document.getElementById('s-type').value,
-      course_id: document.getElementById('s-course').value.trim(),
-      teacher_id: document.getElementById('s-teacher').value.trim(),
-      date: document.getElementById('s-date').value.trim(),
-      time_start: document.getElementById('s-start').value.trim(),
-      time_end: document.getElementById('s-end').value.trim()
-    });
-    if (result.success) {
-      App.ui.showMsg('msg-session', '新增成功！', 'success');
-      App.api.getSessions();
-    } else {
-      App.ui.showMsg('msg-session', '新增失敗：' + result.error, 'error');
-    }
-  };
-
-  // 初始載入講師資料
-  App.api.getTeachers();
+// ============================================================
+// 初始化
+// ============================================================
+(async function init() {
+  await Promise.all([loadTeachers(), loadCourses()]);
+})();
 </script>
 </body>
 </html>
