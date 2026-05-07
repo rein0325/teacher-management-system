@@ -5,6 +5,7 @@ const SHEET_NAMES = {
   TEACHERS: 'Teachers',
   COURSES: 'Courses',
   TEACHER_SKILLS: 'TeacherSkills',
+  TEACHER_BRANCHES: 'TeacherBranches',
   REGULAR_AVAILABILITY: 'RegularAvailability',
   CAMP_AVAILABILITY: 'CampAvailability',
   SESSIONS: 'Sessions'
@@ -93,6 +94,7 @@ function createCourse(payload) {
     id: generateUUID(),
     type: payload.type || 'regular',
     name: payload.name || '',
+    branch: payload.branch || '',
     weekday: payload.weekday !== undefined ? payload.weekday : '',
     time_start: payload.time_start || '',
     time_end: payload.time_end || '',

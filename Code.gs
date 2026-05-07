@@ -62,6 +62,12 @@ function doPost(e) {
       case 'updateCourse':
         return successResponse(updateCourse(payload));
 
+      // 分校相關
+      case 'getTeacherBranches':
+        return successResponse(getTeacherBranches(payload));
+      case 'setTeacherBranches':
+        return successResponse(setTeacherBranches(payload));
+
       // 講師技能相關
       case 'getTeacherSkills':
         return successResponse(getTeacherSkills(payload));
