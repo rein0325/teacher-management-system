@@ -36,7 +36,6 @@
     font-size: 14px;
   }
 
-  /* === 頂部導覽 === */
   .topbar {
     background: #fff;
     border-bottom: 1px solid var(--border);
@@ -71,14 +70,11 @@
   .nav-btn:hover { background: var(--gray-100); }
   .nav-btn.active { background: #e8f0fe; color: var(--primary); font-weight: 500; }
 
-  /* === 主容器 === */
-  .main { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+  .main { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
 
-  /* === 頁面 === */
   .page { display: none; }
   .page.active { display: block; }
 
-  /* === 卡片 === */
   .card {
     background: #fff;
     border: 1px solid var(--border);
@@ -95,7 +91,6 @@
     border-bottom: 1px solid var(--gray-100);
   }
 
-  /* === 表單 === */
   .form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
   .form-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 180px; }
   .form-group.full { flex: 100%; min-width: 100%; }
@@ -115,52 +110,28 @@
   }
   .form-group input:focus,
   .form-group select:focus,
-  .form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-  }
+  .form-group textarea:focus { outline: none; border-color: var(--primary); }
   .form-group textarea { resize: vertical; min-height: 72px; }
 
-  /* 銀行搜尋 */
   .bank-search-wrap { position: relative; }
   .bank-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    box-shadow: var(--shadow-lg);
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 50;
-    display: none;
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 4px; box-shadow: var(--shadow-lg);
+    max-height: 200px; overflow-y: auto; z-index: 50; display: none;
   }
   .bank-dropdown.show { display: block; }
-  .bank-option {
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: background 0.1s;
-    font-size: 13px;
-  }
+  .bank-option { padding: 8px 12px; cursor: pointer; transition: background 0.1s; font-size: 13px; }
   .bank-option:hover { background: var(--gray-100); }
   .bank-option span { color: var(--gray-600); margin-right: 8px; font-size: 12px; }
 
-  /* 課程時間欄位 */
   .course-type-fields { display: none; }
   .course-type-fields.show { display: flex; }
 
-  /* === 按鈕 === */
   .btn {
-    padding: 8px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-family: inherit;
-    font-weight: 500;
-    transition: background 0.15s, box-shadow 0.15s;
+    padding: 8px 20px; border: none; border-radius: 4px;
+    cursor: pointer; font-size: 14px; font-family: inherit;
+    font-weight: 500; transition: background 0.15s, box-shadow 0.15s;
   }
   .btn-primary { background: var(--primary); color: #fff; }
   .btn-primary:hover { background: var(--primary-hover); }
@@ -171,59 +142,31 @@
   .btn-danger:hover { background: #fce8e6; }
   .btn-success { background: #fff; color: var(--success); border: 1px solid var(--success); }
   .btn-success:hover { background: #e6f4ea; }
+  .btn-warning { background: #fff; color: var(--warning); border: 1px solid var(--warning); }
+  .btn-warning:hover { background: #fef7e0; }
 
-  /* === 篩選列 === */
-  .filter-bar {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
+  .filter-bar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
   .filter-bar .filter-label { font-size: 13px; color: var(--gray-600); }
   .filter-chip {
-    padding: 5px 14px;
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    background: #fff;
-    cursor: pointer;
-    font-size: 13px;
-    font-family: inherit;
-    color: var(--gray-800);
-    transition: all 0.15s;
+    padding: 5px 14px; border-radius: 16px; border: 1px solid var(--border);
+    background: #fff; cursor: pointer; font-size: 13px; font-family: inherit;
+    color: var(--gray-800); transition: all 0.15s;
   }
   .filter-chip:hover { border-color: var(--primary); color: var(--primary); }
   .filter-chip.active { background: #e8f0fe; border-color: var(--primary); color: var(--primary); font-weight: 500; }
 
-  /* === 資料表格 === */
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; }
   th {
-    text-align: left;
-    padding: 10px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--gray-600);
-    border-bottom: 2px solid var(--border);
-    white-space: nowrap;
+    text-align: left; padding: 10px 12px; font-size: 12px;
+    font-weight: 600; color: var(--gray-600);
+    border-bottom: 2px solid var(--border); white-space: nowrap;
   }
-  td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--gray-100);
-    font-size: 13px;
-    color: var(--gray-800);
-  }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); font-size: 13px; color: var(--gray-800); }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--gray-50); }
 
-  /* === 狀態標籤 === */
-  .badge {
-    display: inline-block;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 500;
-  }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 500; }
   .badge-active { background: #e6f4ea; color: var(--success); }
   .badge-inactive { background: #f1f3f4; color: var(--gray-600); }
   .badge-regular { background: #e8f0fe; color: var(--primary); }
@@ -231,120 +174,161 @@
   .badge-planned { background: #fef7e0; color: var(--warning); }
   .badge-completed { background: #f1f3f4; color: var(--gray-600); }
 
-  /* === 操作按鈕區 === */
   .action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
 
-  /* === 彈窗 === */
   .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45); z-index: 200;
+    align-items: center; justify-content: center;
   }
   .modal-overlay.show { display: flex; }
   .modal {
-    background: #fff;
-    border-radius: var(--radius);
-    width: 90%;
-    max-width: 560px;
-    max-height: 85vh;
-    overflow-y: auto;
-    padding: 24px;
-    position: relative;
+    background: #fff; border-radius: var(--radius);
+    width: 90%; max-width: 560px; max-height: 85vh;
+    overflow-y: auto; padding: 24px; position: relative;
     box-shadow: var(--shadow-lg);
   }
-  .modal-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: var(--gray-900);
-  }
+  .modal-wide { max-width: 700px; }
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: var(--gray-900); }
   .modal-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: var(--gray-600);
-    line-height: 1;
-    padding: 4px;
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; font-size: 20px;
+    cursor: pointer; color: var(--gray-600); line-height: 1; padding: 4px;
   }
   .modal-close:hover { color: var(--gray-900); }
   .modal-footer { margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px; }
 
-  /* 詳細資訊區塊 */
   .detail-section { margin-bottom: 16px; }
   .detail-section-title {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--gray-600);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-    padding-bottom: 4px;
-    border-bottom: 1px solid var(--gray-100);
+    font-size: 11px; font-weight: 600; color: var(--gray-600);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--gray-100);
   }
   .detail-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
   .detail-label { font-size: 12px; color: var(--gray-600); width: 80px; flex-shrink: 0; padding-top: 1px; }
   .detail-value { font-size: 13px; color: var(--gray-900); flex: 1; }
 
-  /* 行內編輯 select */
   .inline-select {
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 3px 6px;
-    font-size: 12px;
-    font-family: inherit;
-    cursor: pointer;
-    background: #fff;
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 3px 6px; font-size: 12px; font-family: inherit;
+    cursor: pointer; background: #fff;
   }
   .inline-select:focus { outline: none; border-color: var(--primary); }
 
-  /* === 空狀態 === */
   .empty-state { text-align: center; padding: 40px 16px; color: var(--gray-600); }
   .empty-state-icon { font-size: 36px; margin-bottom: 8px; }
   .empty-state p { font-size: 14px; }
 
-  /* === 載入中 === */
   .loading { text-align: center; padding: 32px; color: var(--gray-600); font-size: 13px; }
 
-  /* === Toast 通知 === */
   #toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
+    position: fixed; bottom: 24px; left: 50%;
     transform: translateX(-50%) translateY(20px);
-    background: var(--gray-900);
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 4px;
-    font-size: 13px;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s;
-    z-index: 999;
-    white-space: nowrap;
+    background: var(--gray-900); color: #fff;
+    padding: 10px 20px; border-radius: 4px; font-size: 13px;
+    opacity: 0; pointer-events: none; transition: all 0.3s;
+    z-index: 999; white-space: nowrap;
   }
   #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  /* 分隔線 */
   .section-sep { border: none; border-top: 1px solid var(--gray-100); margin: 16px 0; }
 
-  /* 課程 Session 區 */
-  .session-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--gray-100);
-    font-size: 13px;
+  /* 排班表格樣式 */
+  .schedule-table-wrap { overflow-x: auto; margin-top: 0; }
+  .schedule-table { width: 100%; border-collapse: collapse; min-width: 700px; }
+  .schedule-table th {
+    background: var(--gray-100); padding: 10px 12px;
+    font-size: 12px; font-weight: 600; color: var(--gray-600);
+    border: 1px solid var(--border); text-align: center;
   }
-  .session-item:last-child { border-bottom: none; }
+  .schedule-table th.week-col { text-align: left; width: 100px; }
+  .schedule-table td {
+    border: 1px solid var(--border); vertical-align: top;
+    padding: 0; min-height: 100px;
+  }
+  .schedule-table td.week-label {
+    background: var(--gray-50); padding: 10px 12px;
+    vertical-align: middle; text-align: left;
+  }
+  .week-label-main { font-size: 12px; font-weight: 600; color: var(--gray-900); }
+  .week-label-sub { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
+  .schedule-cell { padding: 8px; min-height: 90px; }
+  .schedule-cell-empty { padding: 12px; color: var(--gray-400); font-size: 12px; text-align: center; }
+
+  /* 課程 chip */
+  .course-chip { border-radius: 6px; padding: 6px 8px; margin-bottom: 6px; }
+  .course-chip:last-child { margin-bottom: 0; }
+  .chip-name { font-size: 11px; font-weight: 600; }
+  .chip-skill { font-size: 10px; margin-top: 1px; opacity: 0.8; }
+  .chip-role-row { display: flex; align-items: center; gap: 4px; margin-top: 5px; }
+  .chip-role-label { font-size: 10px; color: var(--gray-600); width: 20px; flex-shrink: 0; }
+  .chip-person { font-size: 10px; padding: 1px 6px; border-radius: 8px; }
+  .chip-add-btn {
+    font-size: 10px; color: var(--gray-600); background: none;
+    border: 1px dashed var(--gray-400); border-radius: 4px;
+    padding: 1px 6px; cursor: pointer;
+  }
+  .chip-add-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .no-skill-dot {
+    display: inline-block; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--warning);
+    margin-left: 3px; vertical-align: middle;
+  }
+  /* chip 顏色：依技能分類 */
+  .chip-scratch { background: #e8f0fe; }
+  .chip-scratch .chip-name { color: #1557b0; }
+  .chip-scratch .chip-skill { color: #1a73e8; }
+  .chip-scratch .chip-person { background: #c5d8fb; color: #1557b0; }
+
+  .chip-minecraft { background: #e6f4ea; }
+  .chip-minecraft .chip-name { color: #137333; }
+  .chip-minecraft .chip-skill { color: #188038; }
+  .chip-minecraft .chip-person { background: #b7dfc4; color: #137333; }
+
+  .chip-lego { background: #fef7e0; }
+  .chip-lego .chip-name { color: #b06000; }
+  .chip-lego .chip-skill { color: #f29900; }
+  .chip-lego .chip-person { background: #fde68a; color: #b06000; }
+
+  .chip-roblox { background: #f3e8fd; }
+  .chip-roblox .chip-name { color: #7b1fa2; }
+  .chip-roblox .chip-skill { color: #9c27b0; }
+  .chip-roblox .chip-person { background: #ddb8f5; color: #7b1fa2; }
+
+  .chip-python { background: #e0f7fa; }
+  .chip-python .chip-name { color: #006064; }
+  .chip-python .chip-skill { color: #00838f; }
+  .chip-python .chip-person { background: #b2ebf2; color: #006064; }
+
+  .chip-default { background: var(--gray-100); }
+  .chip-default .chip-name { color: var(--gray-800); }
+  .chip-default .chip-skill { color: var(--gray-600); }
+  .chip-default .chip-person { background: var(--gray-200); color: var(--gray-800); }
+
+  /* 推薦彈窗講師列表 */
+  .recommend-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--gray-100);
+  }
+  .recommend-item:last-child { border-bottom: none; }
+  .recommend-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #e8f0fe; display: flex; align-items: center;
+    justify-content: center; font-size: 12px; font-weight: 600;
+    color: var(--primary); flex-shrink: 0;
+  }
+  .recommend-name { font-size: 13px; font-weight: 500; color: var(--gray-900); }
+  .recommend-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 3px; }
+  .tag-ok { background: #e6f4ea; color: var(--success); font-size: 10px; padding: 1px 6px; border-radius: 8px; }
+  .tag-warn { background: #fef7e0; color: var(--warning); font-size: 10px; padding: 1px 6px; border-radius: 8px; }
+  .recommend-actions { margin-left: auto; display: flex; gap: 6px; flex-shrink: 0; }
+
+  .schedule-legend {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    padding: 12px 0; font-size: 11px; color: var(--gray-600);
+    align-items: center;
+  }
+  .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
 
   @media (max-width: 600px) {
     .topbar { padding: 0 12px; }
@@ -356,20 +340,18 @@
 </head>
 <body>
 
-<!-- 頂部導覽 -->
 <div class="topbar">
   <div class="topbar-logo">📋 講師管理系統</div>
-  <button class="nav-btn active" onclick="switchPage('teachers')">講師管理</button>
-  <button class="nav-btn" onclick="switchPage('courses')">課程管理</button>
-  <button class="nav-btn" onclick="switchPage('availability')">可上班時間</button>
+  <button class="nav-btn active" onclick="switchPage('teachers', this)">講師管理</button>
+  <button class="nav-btn" onclick="switchPage('courses', this)">課程管理</button>
+  <button class="nav-btn" onclick="switchPage('availability', this)">可上班時間</button>
+  <button class="nav-btn" onclick="switchPage('schedule', this)">排班管理</button>
 </div>
 
 <div class="main">
 
   <!-- ========== 講師頁面 ========== -->
   <div class="page active" id="page-teachers">
-
-    <!-- 新增講師表單 -->
     <div class="card">
       <div class="card-title">新增講師</div>
       <div class="form-row">
@@ -399,7 +381,7 @@
       <div class="form-row">
         <div class="form-group full">
           <label>地址</label>
-          <input type="text" id="t-address" placeholder="台北市中正區...">
+          <input type="text" id="t-address" placeholder="台北市...">
         </div>
       </div>
       <div class="form-row">
@@ -427,7 +409,6 @@
       </div>
     </div>
 
-    <!-- 講師清單 -->
     <div class="card">
       <div class="card-title">講師清單</div>
       <div class="filter-bar">
@@ -439,13 +420,7 @@
       <div class="table-wrap">
         <table>
           <thead>
-            <tr>
-              <th>姓名</th>
-              <th>Email</th>
-              <th>手機</th>
-              <th>狀態</th>
-              <th>操作</th>
-            </tr>
+            <tr><th>姓名</th><th>Email</th><th>手機</th><th>狀態</th><th>操作</th></tr>
           </thead>
           <tbody id="teacher-list">
             <tr><td colspan="5" class="loading">載入中...</td></tr>
@@ -457,14 +432,12 @@
 
   <!-- ========== 課程頁面 ========== -->
   <div class="page" id="page-courses">
-
-    <!-- 新增課程表單 -->
     <div class="card">
       <div class="card-title">新增課程</div>
       <div class="form-row">
         <div class="form-group">
           <label>課程名稱 *</label>
-          <input type="text" id="c-name" placeholder="Scratch、Python...">
+          <input type="text" id="c-name" placeholder="Scratch探險家...">
         </div>
         <div class="form-group">
           <label>課程類型 *</label>
@@ -483,6 +456,29 @@
             <option value="大直校">大直校</option>
             <option value="板橋校">板橋校</option>
             <option value="重慶校">重慶校</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>詳細分類（梯次）</label>
+          <input type="text" id="c-category" placeholder="如：2026冬令營">
+        </div>
+        <div class="form-group">
+          <label>課程主題（技能）</label>
+          <select id="c-skill">
+            <option value="">請選擇</option>
+            <option value="Scratch">Scratch</option>
+            <option value="Scratch JR">Scratch JR</option>
+            <option value="Arcade">Arcade</option>
+            <option value="Scratch+MicroBit">Scratch+MicroBit</option>
+            <option value="Scratch AI">Scratch AI</option>
+            <option value="Python">Python</option>
+            <option value="MicroPython">MicroPython</option>
+            <option value="Lego">Lego</option>
+            <option value="Minecraft">Minecraft</option>
+            <option value="MicroBit">MicroBit</option>
+            <option value="Roblox">Roblox</option>
+            <option value="MPM數學">MPM數學</option>
+            <option value="時時學">時時學</option>
           </select>
         </div>
       </div>
@@ -512,7 +508,7 @@
         </div>
       </div>
 
-      <!-- 營隊欄位 -->
+      <!-- 營隊欄位（移除每日時間） -->
       <div class="form-row course-type-fields" id="camp-fields">
         <div class="form-group">
           <label>開始日期</label>
@@ -522,14 +518,6 @@
           <label>結束日期</label>
           <input type="date" id="c-date-end">
         </div>
-        <div class="form-group">
-          <label>每日開始時間</label>
-          <input type="time" id="c-camp-time-start">
-        </div>
-        <div class="form-group">
-          <label>每日結束時間</label>
-          <input type="time" id="c-camp-time-end">
-        </div>
       </div>
 
       <div style="display:flex;justify-content:flex-end;margin-top:8px;">
@@ -537,7 +525,6 @@
       </div>
     </div>
 
-    <!-- 課程清單 -->
     <div class="card">
       <div class="card-title">課程清單</div>
       <div class="filter-bar">
@@ -556,18 +543,10 @@
       <div class="table-wrap">
         <table>
           <thead>
-            <tr>
-              <th>課程名稱</th>
-              <th>類型</th>
-              <th>分校</th>
-              <th>時間</th>
-              <th>授課講師</th>
-              <th>狀態</th>
-              <th>操作</th>
-            </tr>
+            <tr><th>課程名稱</th><th>類型</th><th>梯次</th><th>分校</th><th>技能</th><th>時間</th><th>狀態</th><th>操作</th></tr>
           </thead>
           <tbody id="course-list">
-            <tr><td colspan="7" class="loading">載入中...</td></tr>
+            <tr><td colspan="8" class="loading">載入中...</td></tr>
           </tbody>
         </table>
       </div>
@@ -576,8 +555,6 @@
 
   <!-- ========== 可上班時間頁面 ========== -->
   <div class="page" id="page-availability">
-
-    <!-- 選擇講師 -->
     <div class="card">
       <div class="card-title">選擇講師</div>
       <div class="form-row">
@@ -590,25 +567,16 @@
       </div>
     </div>
 
-    <!-- 選擇講師後才顯示下方區塊 -->
     <div id="avail-content" style="display:none">
-
-      <!-- 可去的分校 + 常態班可上班時間 並排 -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-
-        <!-- 可去的分校 -->
         <div class="card">
           <div class="card-title">可去的分校</div>
           <p style="font-size:12px;color:var(--gray-600);margin-bottom:12px">勾選這位講師可以前往的分校</p>
-          <div id="branch-checkbox-list">
-            <!-- 由 JS 渲染 -->
-          </div>
+          <div id="branch-checkbox-list"></div>
           <div style="display:flex;justify-content:flex-end;margin-top:12px">
             <button class="btn btn-primary" onclick="saveTeacherBranches()">儲存分校</button>
           </div>
         </div>
-
-        <!-- 常態班可上班時間 -->
         <div class="card">
           <div class="card-title">常態班可上班時間</div>
           <div class="form-row" style="align-items:flex-end;margin-bottom:8px">
@@ -616,12 +584,9 @@
               <label>星期</label>
               <select id="avail-reg-weekday">
                 <option value="">請選擇</option>
-                <option value="1">週一</option>
-                <option value="2">週二</option>
-                <option value="3">週三</option>
-                <option value="4">週四</option>
-                <option value="5">週五</option>
-                <option value="6">週六</option>
+                <option value="1">週一</option><option value="2">週二</option>
+                <option value="3">週三</option><option value="4">週四</option>
+                <option value="5">週五</option><option value="6">週六</option>
                 <option value="0">週日</option>
               </select>
             </div>
@@ -639,36 +604,69 @@
           </div>
           <div class="table-wrap">
             <table>
-              <thead>
-                <tr><th>星期</th><th>時段</th><th>操作</th></tr>
-              </thead>
+              <thead><tr><th>星期</th><th>時段</th><th>操作</th></tr></thead>
               <tbody id="avail-reg-list">
                 <tr><td colspan="3" class="loading">請先選擇講師</td></tr>
               </tbody>
             </table>
           </div>
         </div>
-
       </div>
 
-      <!-- 營隊可上班時段（從課程清單撈不重複的營隊日期區間） -->
       <div class="card">
         <div class="card-title">營隊可上班時段</div>
         <p style="font-size:12px;color:var(--gray-600);margin-bottom:12px">
           勾選這位講師有空的營隊梯次時段，儲存後即生效
         </p>
-        <div id="camp-avail-checkbox-list">
-          <!-- 由 JS 渲染 -->
-        </div>
+        <div id="camp-avail-checkbox-list"></div>
         <div style="display:flex;justify-content:flex-end;margin-top:12px">
           <button class="btn btn-primary" onclick="saveCampAvailability()">儲存營隊時段</button>
         </div>
       </div>
-
     </div>
   </div>
 
+  <!-- ========== 排班管理頁面 ========== -->
+  <div class="page" id="page-schedule">
+    <div class="card">
+      <div class="card-title">營隊排班管理</div>
+      <div class="form-row" style="align-items:flex-end">
+        <div class="form-group" style="max-width:240px">
+          <label>選擇梯次</label>
+          <select id="schedule-category-select" onchange="onScheduleCategoryChange()">
+            <option value="">— 請選擇梯次 —</option>
+          </select>
+        </div>
+        <div style="padding-bottom:2px">
+          <button class="btn btn-outline" onclick="loadScheduleCategories()">重新整理</button>
+        </div>
+        <div style="flex:1"></div>
+        <div id="schedule-auto-all-btn" style="display:none;padding-bottom:2px">
+          <button class="btn btn-primary" onclick="autoScheduleAll()">全部自動排班</button>
+        </div>
+      </div>
+      <div id="schedule-summary" style="font-size:12px;color:var(--gray-600);margin-top:4px"></div>
+    </div>
+
+    <div class="card" id="schedule-legend-card" style="display:none;padding:12px 24px;">
+      <div class="schedule-legend">
+        <strong style="font-size:12px;color:var(--gray-600);margin-right:4px">圖例：</strong>
+        <span><span class="legend-dot" style="background:#1a73e8"></span>Scratch 系列</span>
+        <span><span class="legend-dot" style="background:#188038"></span>Minecraft 系列</span>
+        <span><span class="legend-dot" style="background:#f29900"></span>LEGO 系列</span>
+        <span><span class="legend-dot" style="background:#9c27b0"></span>Roblox 系列</span>
+        <span><span class="legend-dot" style="background:#00838f"></span>Python 系列</span>
+        <span><span class="legend-dot" style="background:var(--gray-400)"></span>其他</span>
+        <span><span class="legend-dot" style="background:var(--warning)"></span>助教無相關技能</span>
+      </div>
+    </div>
+
+    <div id="schedule-table-wrap"></div>
+  </div>
+
 </div>
+
+<!-- 講師彈窗 -->
 <div class="modal-overlay" id="teacher-modal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('teacher-modal')">✕</button>
@@ -681,7 +679,7 @@
   </div>
 </div>
 
-<!-- ========== 課程詳細/編輯彈窗 ========== -->
+<!-- 課程彈窗 -->
 <div class="modal-overlay" id="course-modal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('course-modal')">✕</button>
@@ -694,7 +692,18 @@
   </div>
 </div>
 
-<!-- Toast -->
+<!-- 排班推薦彈窗 -->
+<div class="modal-overlay" id="recommend-modal">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeModal('recommend-modal')">✕</button>
+    <div class="modal-title" id="recommend-modal-title">推薦講師</div>
+    <div id="recommend-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('recommend-modal')">關閉</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -703,7 +712,6 @@
 // ============================================================
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-BbbcHTd1LgkcdcgBvHosN9OtgxuojIArBj2E9GrVaHsgAm6b22rVcXbBdHZpWlZ_mA/exec';
 
-// 台灣銀行清單（代碼 + 名稱）
 const BANKS = [
   {code:'004',name:'台灣銀行'},{code:'005',name:'土地銀行'},{code:'006',name:'合作金庫銀行'},
   {code:'007',name:'第一銀行'},{code:'008',name:'華南銀行'},{code:'009',name:'彰化銀行'},
@@ -722,16 +730,14 @@ const BANKS = [
   {code:'812',name:'台新銀行(舊)'},{code:'822',name:'中國信託'}
 ];
 
-// ============================================================
-// 講師授課技能清單（固定項目，不從課程撈）
-// 修改這裡即可新增或移除技能選項
-// ============================================================
 const SKILLS = [
   'Scratch', 'Scratch JR', 'Arcade', 'Scratch+MicroBit', 'Scratch AI',
-  'Python', 'MicroPython',
-  'Lego', 'Minecraft', 'MicroBit', 'Roblox',
+  'Python', 'MicroPython', 'Lego', 'Minecraft', 'MicroBit', 'Roblox',
   'MPM數學', '時時學'
 ];
+
+const BRANCHES = ['延壽校', '安和校', '大直校', '板橋校', '重慶校'];
+const WEEKDAY_MAP = { '0':'週日','1':'週一','2':'週二','3':'週三','4':'週四','5':'週五','6':'週六' };
 
 // ============================================================
 // 全域狀態
@@ -742,6 +748,9 @@ let teacherFilter = 'all';
 let courseFilter = 'all';
 let currentEditTeacher = null;
 let currentEditCourse = null;
+let scheduleData = null;       // 排班用的完整資料
+let currentScheduleCategory = '';  // 目前選擇的梯次
+let currentRecommendInfo = null;   // 目前推薦的課程資訊
 
 // ============================================================
 // JSONP API
@@ -778,11 +787,13 @@ function showToast(msg, duration = 2500) {
 // ============================================================
 // 頁面切換
 // ============================================================
-function switchPage(page) {
+function switchPage(page, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
-  event.currentTarget.classList.add('active');
+  if (btn) btn.classList.add('active');
+  // 切換到排班頁時自動載入梯次
+  if (page === 'schedule') loadScheduleCategories();
 }
 
 // ============================================================
@@ -799,7 +810,6 @@ function filterBanks() {
   const list = q ? BANKS.filter(b => b.code.includes(q) || b.name.includes(q)) : BANKS;
   renderBankDropdown(list);
 }
-
 function renderBankDropdown(list) {
   const dd = document.getElementById('bank-dropdown');
   dd.innerHTML = list.slice(0, 30).map(b =>
@@ -807,10 +817,8 @@ function renderBankDropdown(list) {
   ).join('');
   dd.classList.add('show');
 }
-
 function showBankDropdown() { renderBankDropdown(BANKS.slice(0, 30)); }
 function hideBankDropdown() { setTimeout(() => document.getElementById('bank-dropdown').classList.remove('show'), 200); }
-
 function selectBank(code, name) {
   document.getElementById('t-bank-search').value = `${code} ${name}`;
   document.getElementById('t-bank-code').value = code;
@@ -829,8 +837,6 @@ function onCourseTypeChange() {
 // ============================================================
 // 工具函式
 // ============================================================
-const WEEKDAY_MAP = { '0':'週日','1':'週一','2':'週二','3':'週三','4':'週四','5':'週五','6':'週六' };
-
 function formatWeekday(val) { return WEEKDAY_MAP[String(val)] || ''; }
 
 function formatCourseTime(c) {
@@ -842,11 +848,7 @@ function formatCourseTime(c) {
   } else if (c.type === 'camp') {
     const ds = c.date_start || '';
     const de = c.date_end || '';
-    const ts = c.time_start || '';
-    const te = c.time_end || '';
-    let s = ds && de ? `${ds} ~ ${de}` : '';
-    if (ts && te) s += ` ${ts}–${te}`;
-    return s;
+    return ds && de ? `${ds} ~ ${de}` : '';
   }
   return '';
 }
@@ -856,16 +858,30 @@ function getTeacherName(id) {
   return t ? t.name : (id ? '(未知)' : '—');
 }
 
+function getBankName(code) {
+  const b = BANKS.find(b => b.code === String(code));
+  return b ? b.name : '';
+}
+
+// 根據技能名稱回傳 chip 色系 class
+function getChipClass(skill) {
+  if (!skill) return 'chip-default';
+  const s = skill.toLowerCase();
+  if (s.includes('scratch') || s.includes('arcade')) return 'chip-scratch';
+  if (s.includes('minecraft') || s.includes('microbit') || s.includes('micropython') || s.includes('lego')) return 'chip-minecraft';
+  if (s === 'lego') return 'chip-lego';
+  if (s.includes('roblox')) return 'chip-roblox';
+  if (s.includes('python')) return 'chip-python';
+  return 'chip-default';
+}
+
 // ============================================================
 // ===== 講師 =====
 // ============================================================
 async function loadTeachers() {
   try {
     const res = await App.call('getTeachers');
-    if (res.success) {
-      allTeachers = res.data;
-      renderTeacherList();
-    }
+    if (res.success) { allTeachers = res.data; renderTeacherList(); }
   } catch(e) { showToast('載入講師失敗'); }
 }
 
@@ -879,7 +895,6 @@ function renderTeacherList() {
     tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">👤</div><p>尚無講師資料</p></div></td></tr>`;
     return;
   }
-
   tbody.innerHTML = data.map(t => `
     <tr>
       <td><strong>${t.name}</strong></td>
@@ -903,18 +918,15 @@ function filterTeachers(status, el) {
   renderTeacherList();
 }
 
-// 開啟講師詳細彈窗
 function openTeacherDetail(id) {
   const t = allTeachers.find(t => t.id === id);
   if (!t) return;
-  // 記住當前講師，技能頁返回時需要
   currentEditTeacher = t;
   document.getElementById('teacher-modal-save-btn').style.display = 'none';
   renderTeacherDetailBody(t);
   openModal('teacher-modal');
 }
 
-// 渲染講師詳細內容（獨立成函式，方便從技能頁返回時直接呼叫）
 function renderTeacherDetailBody(t) {
   document.getElementById('teacher-modal-title').textContent = `${t.name} — 詳細資料`;
   document.getElementById('teacher-modal-save-btn').style.display = 'none';
@@ -941,47 +953,28 @@ function renderTeacherDetailBody(t) {
     </div>
     ${t.note ? `<div class="detail-section"><div class="detail-section-title">備註</div><div style="font-size:13px;color:var(--gray-800);line-height:1.6">${t.note}</div></div>` : ''}
     <hr class="section-sep">
-    <!-- 授課技能入口按鈕 -->
     <div style="display:flex;justify-content:flex-end;">
       <button class="btn btn-outline" onclick="openTeacherSkills('${t.id}')">📚 授課技能設定</button>
     </div>
   `;
 }
 
-// ============================================================
-// 講師授課技能設定
-// ============================================================
-
-// 切換彈窗內容到技能設定頁面
 async function openTeacherSkills(teacherId) {
   const t = allTeachers.find(t => t.id === teacherId);
   if (!t) return;
-
   document.getElementById('teacher-modal-title').textContent = `${t.name} — 授課技能設定`;
   document.getElementById('teacher-modal-save-btn').style.display = 'none';
   document.getElementById('teacher-modal-body').innerHTML = `<div class="loading">載入中...</div>`;
-
   try {
-    // 從後端取得這位講師已設定的技能
     const res = await App.call('getTeacherSkills', { teacher_id: teacherId });
-    // 已設定的技能名稱清單（存在 TeacherSkills 的 course_id 欄位）
     const existingSkills = res.success ? res.data.map(s => s.course_id) : [];
-
     document.getElementById('teacher-modal-body').innerHTML = `
-      <!-- 返回詳細資料按鈕 -->
-      <button class="btn btn-outline btn-sm" style="margin-bottom:16px"
-        onclick="renderTeacherDetailBody(currentEditTeacher)">← 返回詳細資料</button>
-      <div style="font-size:12px;color:var(--gray-600);margin-bottom:12px">
-        勾選這位講師會教的技能，儲存後即生效
-      </div>
-      <!-- 技能勾選清單（從固定的 SKILLS 陣列渲染，不從課程撈） -->
+      <button class="btn btn-outline btn-sm" style="margin-bottom:16px" onclick="renderTeacherDetailBody(currentEditTeacher)">← 返回詳細資料</button>
+      <div style="font-size:12px;color:var(--gray-600);margin-bottom:12px">勾選這位講師會教的技能，儲存後即生效</div>
       <div id="skills-checkbox-list">
         ${SKILLS.map(skill => `
-          <label style="display:flex;align-items:center;gap:10px;padding:10px 0;
-            border-bottom:1px solid var(--gray-100);cursor:pointer;font-size:14px;">
-            <input type="checkbox" value="${skill}"
-              ${existingSkills.includes(skill) ? 'checked' : ''}
-              style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary)">
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-100);cursor:pointer;font-size:14px;">
+            <input type="checkbox" value="${skill}" ${existingSkills.includes(skill) ? 'checked' : ''} style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary)">
             <span>${skill}</span>
           </label>
         `).join('')}
@@ -991,50 +984,29 @@ async function openTeacherSkills(teacherId) {
       </div>
     `;
   } catch(e) {
-    document.getElementById('teacher-modal-body').innerHTML =
-      `<div class="empty-state"><p>載入失敗，請稍後再試</p></div>`;
+    document.getElementById('teacher-modal-body').innerHTML = `<div class="empty-state"><p>載入失敗，請稍後再試</p></div>`;
   }
 }
 
-// 儲存講師技能
-// 注意：技能名稱（如 "Scratch"）直接當作 course_id 存入 TeacherSkills
-// 因為技能是固定清單，與實際課程 UUID 無關
 async function saveTeacherSkills(teacherId) {
-  // 收集所有勾選的技能名稱
   const checkboxes = document.querySelectorAll('#skills-checkbox-list input[type="checkbox"]');
   const checkedSkills = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
-
   try {
-    const res = await App.call('setTeacherSkills', {
-      teacher_id: teacherId,
-      course_ids: checkedSkills
-    });
+    const res = await App.call('setTeacherSkills', { teacher_id: teacherId, course_ids: checkedSkills });
     if (res.success) {
       showToast('✓ 授課技能已儲存');
       renderTeacherDetailBody(currentEditTeacher);
-    } else {
-      showToast('儲存失敗：' + res.error);
-    }
-  } catch(e) {
-    showToast('儲存失敗，請稍後再試');
-  }
+    } else { showToast('儲存失敗：' + res.error); }
+  } catch(e) { showToast('儲存失敗，請稍後再試'); }
 }
 
-function getBankName(code) {
-  const b = BANKS.find(b => b.code === String(code));
-  return b ? b.name : '';
-}
-
-// 編輯講師
 function openTeacherEdit(id) {
   const t = allTeachers.find(t => t.id === id);
   if (!t) return;
   currentEditTeacher = t;
   document.getElementById('teacher-modal-title').textContent = `編輯講師 — ${t.name}`;
   document.getElementById('teacher-modal-save-btn').style.display = '';
-
   const bankDisplay = t.bank_code ? `${t.bank_code} ${getBankName(t.bank_code)}` : '';
-
   document.getElementById('teacher-modal-body').innerHTML = `
     <div class="form-row">
       <div class="form-group"><label>姓名 *</label><input type="text" id="e-name" value="${t.name || ''}"></div>
@@ -1063,8 +1035,7 @@ function openTeacherEdit(id) {
       <div class="form-group">
         <label>銀行代碼</label>
         <div class="bank-search-wrap">
-          <input type="text" id="e-bank-search" value="${bankDisplay}" placeholder="輸入銀行名稱或代碼搜尋" autocomplete="off"
-            oninput="filterBanksEdit()" onfocus="showBankDropdownEdit()" onblur="hideBankDropdownEdit()">
+          <input type="text" id="e-bank-search" value="${bankDisplay}" placeholder="輸入銀行名稱或代碼搜尋" autocomplete="off" oninput="filterBanksEdit()" onfocus="showBankDropdownEdit()" onblur="hideBankDropdownEdit()">
           <input type="hidden" id="e-bank-code" value="${t.bank_code || ''}">
           <div class="bank-dropdown" id="bank-dropdown-edit"></div>
         </div>
@@ -1078,7 +1049,6 @@ function openTeacherEdit(id) {
   openModal('teacher-modal');
 }
 
-// 編輯彈窗內的銀行搜尋
 function filterBanksEdit() {
   const q = document.getElementById('e-bank-search').value.toLowerCase();
   const list = q ? BANKS.filter(b => b.code.includes(q) || b.name.includes(q)) : BANKS;
@@ -1088,10 +1058,7 @@ function filterBanksEdit() {
   ).join('');
   dd.classList.add('show');
 }
-function showBankDropdownEdit() {
-  filterBanksEdit();
-  document.getElementById('bank-dropdown-edit').classList.add('show');
-}
+function showBankDropdownEdit() { filterBanksEdit(); document.getElementById('bank-dropdown-edit').classList.add('show'); }
 function hideBankDropdownEdit() { setTimeout(() => { const dd = document.getElementById('bank-dropdown-edit'); if(dd) dd.classList.remove('show'); }, 200); }
 function selectBankEdit(code, name) {
   document.getElementById('e-bank-search').value = `${code} ${name}`;
@@ -1143,10 +1110,8 @@ async function createTeacher() {
     const res = await App.call('createTeacher', payload);
     if (res.success) {
       showToast('✓ 已新增講師：' + name);
-      // 清空表單
       ['t-name','t-email','t-phone','t-id-number','t-birthday','t-address','t-bank-search','t-bank-code','t-bank-account','t-note'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
+        const el = document.getElementById(id); if (el) el.value = '';
       });
       await loadTeachers();
     } else { showToast('新增失敗：' + res.error); }
@@ -1159,10 +1124,7 @@ async function createTeacher() {
 async function loadCourses() {
   try {
     const res = await App.call('getCourses');
-    if (res.success) {
-      allCourses = res.data;
-      renderCourseList();
-    }
+    if (res.success) { allCourses = res.data; renderCourseList(); }
   } catch(e) { showToast('載入課程失敗'); }
 }
 
@@ -1173,11 +1135,10 @@ function renderCourseList() {
   else if (courseFilter === 'camp') data = data.filter(c => c.type === 'camp');
   else if (courseFilter === 'active') data = data.filter(c => c.status === 'active');
   else if (courseFilter === 'inactive') data = data.filter(c => c.status === 'inactive');
-  // 分校篩選：不符合上述固定值時視為分校名稱篩選
   else if (courseFilter !== 'all') data = data.filter(c => c.branch === courseFilter);
 
   if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">📚</div><p>尚無課程資料</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-state-icon">📚</div><p>尚無課程資料</p></div></td></tr>`;
     return;
   }
 
@@ -1185,19 +1146,14 @@ function renderCourseList() {
     const timeStr = formatCourseTime(c);
     const typeLabel = c.type === 'regular' ? '常態班' : c.type === 'camp' ? '營隊' : '—';
     const typeBadge = c.type === 'regular' ? 'badge-regular' : 'badge-camp';
-
     return `
     <tr>
       <td><strong>${c.name}</strong></td>
       <td><span class="badge ${typeBadge}">${typeLabel}</span></td>
+      <td style="font-size:12px">${c.category || '—'}</td>
       <td>${c.branch || '—'}</td>
+      <td>${c.skill ? `<span class="badge badge-regular">${c.skill}</span>` : '—'}</td>
       <td style="font-size:12px;color:var(--gray-600)">${timeStr || '—'}</td>
-      <td>
-        <select class="inline-select" onchange="updateCourseTeacher('${c.id}', this.value)">
-          <option value="">— 指定講師 —</option>
-          ${allTeachers.filter(t => t.status === 'active').map(t => `<option value="${t.id}">${t.name}</option>`).join('')}
-        </select>
-      </td>
       <td>
         <select class="inline-select" onchange="updateCourseStatus('${c.id}', this.value)">
           <option value="active" ${c.status === 'active' ? 'selected' : ''}>上課中</option>
@@ -1233,28 +1189,6 @@ async function updateCourseStatus(id, status) {
   } catch(e) { showToast('更新失敗'); }
 }
 
-async function updateCourseTeacher(courseId, teacherId) {
-  if (!teacherId) return;
-  // 新增一筆 Session 記錄
-  try {
-    const c = allCourses.find(c => c.id === courseId);
-    const payload = {
-      type: c ? c.type : 'regular',
-      course_id: courseId,
-      teacher_id: teacherId,
-      date: '',
-      time_start: c ? (c.time_start || '') : '',
-      time_end: c ? (c.time_end || '') : '',
-      note: '由課程管理指定'
-    };
-    const res = await App.call('createSession', payload);
-    if (res.success) {
-      showToast('✓ 已指定授課講師：' + getTeacherName(teacherId));
-    } else { showToast('指定失敗'); }
-  } catch(e) { showToast('指定失敗'); }
-}
-
-// 開啟課程詳細彈窗（顯示完整時間資訊、分校與授課講師）
 function openCourseDetail(id) {
   const c = allCourses.find(c => c.id === id);
   if (!c) return;
@@ -1262,8 +1196,6 @@ function openCourseDetail(id) {
   document.getElementById('course-modal-save-btn').style.display = 'none';
   const typeLabel = c.type === 'regular' ? '常態班' : c.type === 'camp' ? '營隊' : '—';
   const typeBadge = c.type === 'regular' ? 'badge-regular' : 'badge-camp';
-
-  // 依課程類型組合不同的時間顯示
   let timeBlock = '';
   if (c.type === 'regular') {
     timeBlock = `
@@ -1274,16 +1206,16 @@ function openCourseDetail(id) {
     timeBlock = `
       <div class="detail-row"><span class="detail-label">開始日期</span><span class="detail-value">${c.date_start || '—'}</span></div>
       <div class="detail-row"><span class="detail-label">結束日期</span><span class="detail-value">${c.date_end || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">每日時間</span><span class="detail-value">${c.time_start && c.time_end ? `${c.time_start} – ${c.time_end}` : '—'}</span></div>
     `;
   }
-
   document.getElementById('course-modal-body').innerHTML = `
     <div class="detail-section">
       <div class="detail-section-title">課程資訊</div>
       <div class="detail-row"><span class="detail-label">課程名稱</span><span class="detail-value">${c.name}</span></div>
       <div class="detail-row"><span class="detail-label">類型</span><span class="detail-value"><span class="badge ${typeBadge}">${typeLabel}</span></span></div>
+      <div class="detail-row"><span class="detail-label">梯次</span><span class="detail-value">${c.category || '—'}</span></div>
       <div class="detail-row"><span class="detail-label">分校</span><span class="detail-value">${c.branch || '—'}</span></div>
+      <div class="detail-row"><span class="detail-label">技能</span><span class="detail-value">${c.skill || '—'}</span></div>
       <div class="detail-row"><span class="detail-label">狀態</span><span class="detail-value">
         <span class="badge badge-${c.status === 'active' ? 'active' : 'inactive'}">${c.status === 'active' ? '上課中' : '已結束'}</span>
       </span></div>
@@ -1302,10 +1234,9 @@ function openCourseEdit(id) {
   currentEditCourse = c;
   document.getElementById('course-modal-title').textContent = `編輯課程 — ${c.name}`;
   document.getElementById('course-modal-save-btn').style.display = '';
-
-  const branchOptions = ['延壽校','安和校','大直校','板橋校','重慶校']
-    .map(b => `<option value="${b}" ${c.branch === b ? 'selected' : ''}>${b}</option>`).join('');
-
+  const branchOptions = BRANCHES.map(b => `<option value="${b}" ${c.branch === b ? 'selected' : ''}>${b}</option>`).join('');
+  const skillOptions = ['','Scratch','Scratch JR','Arcade','Scratch+MicroBit','Scratch AI','Python','MicroPython','Lego','Minecraft','MicroBit','Roblox','MPM數學','時時學']
+    .map(s => `<option value="${s}" ${c.skill === s ? 'selected' : ''}>${s || '請選擇'}</option>`).join('');
   document.getElementById('course-modal-body').innerHTML = `
     <div class="form-row">
       <div class="form-group"><label>課程名稱 *</label><input type="text" id="ec-name" value="${c.name || ''}"></div>
@@ -1316,13 +1247,11 @@ function openCourseEdit(id) {
           <option value="camp" ${c.type === 'camp' ? 'selected' : ''}>營隊</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>分校</label>
-        <select id="ec-branch">
-          <option value="">請選擇</option>
-          ${branchOptions}
-        </select>
-      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>分校</label><select id="ec-branch"><option value="">請選擇</option>${branchOptions}</select></div>
+      <div class="form-group"><label>詳細分類（梯次）</label><input type="text" id="ec-category" value="${c.category || ''}"></div>
+      <div class="form-group"><label>課程主題（技能）</label><select id="ec-skill">${skillOptions}</select></div>
     </div>
     <div class="form-row course-type-fields ${c.type === 'regular' ? 'show' : ''}" id="ec-regular-fields">
       <div class="form-group">
@@ -1338,8 +1267,6 @@ function openCourseEdit(id) {
     <div class="form-row course-type-fields ${c.type === 'camp' ? 'show' : ''}" id="ec-camp-fields">
       <div class="form-group"><label>開始日期</label><input type="date" id="ec-date-start" value="${c.date_start || ''}"></div>
       <div class="form-group"><label>結束日期</label><input type="date" id="ec-date-end" value="${c.date_end || ''}"></div>
-      <div class="form-group"><label>每日開始時間</label><input type="time" id="ec-camp-time-start" value="${c.time_start || ''}"></div>
-      <div class="form-group"><label>每日結束時間</label><input type="time" id="ec-camp-time-end" value="${c.time_end || ''}"></div>
     </div>
     <div class="form-row">
       <div class="form-group">
@@ -1368,14 +1295,12 @@ async function saveCourse() {
     name: document.getElementById('ec-name').value.trim(),
     type,
     branch: document.getElementById('ec-branch').value,
+    category: document.getElementById('ec-category').value.trim(),
+    skill: document.getElementById('ec-skill').value,
     status: document.getElementById('ec-status').value,
     weekday: type === 'regular' ? document.getElementById('ec-weekday').value : '',
-    time_start: type === 'regular'
-      ? document.getElementById('ec-time-start').value
-      : document.getElementById('ec-camp-time-start').value,
-    time_end: type === 'regular'
-      ? document.getElementById('ec-time-end').value
-      : document.getElementById('ec-camp-time-end').value,
+    time_start: type === 'regular' ? document.getElementById('ec-time-start').value : '',
+    time_end: type === 'regular' ? document.getElementById('ec-time-end').value : '',
     date_start: type === 'camp' ? document.getElementById('ec-date-start').value : '',
     date_end: type === 'camp' ? document.getElementById('ec-date-end').value : ''
   };
@@ -1397,30 +1322,26 @@ async function createCourse() {
   if (!name) { showToast('請輸入課程名稱'); return; }
   if (!type) { showToast('請選擇課程類型'); return; }
   if (!branch) { showToast('請選擇分校'); return; }
-
   const payload = {
     name, type, branch,
+    category: document.getElementById('c-category').value.trim(),
+    skill: document.getElementById('c-skill').value,
     weekday: type === 'regular' ? document.getElementById('c-weekday').value : '',
-    time_start: type === 'regular'
-      ? document.getElementById('c-time-start').value
-      : document.getElementById('c-camp-time-start').value,
-    time_end: type === 'regular'
-      ? document.getElementById('c-time-end').value
-      : document.getElementById('c-camp-time-end').value,
+    time_start: type === 'regular' ? document.getElementById('c-time-start').value : '',
+    time_end: type === 'regular' ? document.getElementById('c-time-end').value : '',
     date_start: type === 'camp' ? document.getElementById('c-date-start').value : '',
     date_end: type === 'camp' ? document.getElementById('c-date-end').value : ''
   };
-
   try {
     const res = await App.call('createCourse', payload);
     if (res.success) {
       showToast('✓ 已新增課程：' + name);
-      // 清空表單
-      ['c-name','c-weekday','c-time-start','c-time-end','c-date-start','c-date-end','c-camp-time-start','c-camp-time-end'].forEach(id => {
+      ['c-name','c-category','c-weekday','c-time-start','c-time-end','c-date-start','c-date-end'].forEach(id => {
         const el = document.getElementById(id); if(el) el.value = '';
       });
       document.getElementById('c-type').value = '';
       document.getElementById('c-branch').value = '';
+      document.getElementById('c-skill').value = '';
       document.getElementById('regular-fields').classList.remove('show');
       document.getElementById('camp-fields').classList.remove('show');
       await loadCourses();
@@ -1431,16 +1352,9 @@ async function createCourse() {
 // ============================================================
 // ===== 可上班時間 =====
 // ============================================================
-
-// 固定的分校清單
-const BRANCHES = ['延壽校', '安和校', '大直校', '板橋校', '重慶校'];
-
-// 目前選擇的講師 id
 let currentAvailTeacherId = null;
-// 暫存目前講師已勾選的分校
 let currentTeacherBranches = [];
 
-// 填入講師下拉選單（只顯示在職講師）
 function populateAvailTeacherSelect() {
   const sel = document.getElementById('avail-teacher-select');
   const current = sel.value;
@@ -1450,76 +1364,45 @@ function populateAvailTeacherSelect() {
       .join('');
 }
 
-// 選擇講師後同時載入：分校設定、常態班時間、營隊時段
 async function onAvailTeacherChange() {
   const teacherId = document.getElementById('avail-teacher-select').value;
-  if (!teacherId) {
-    document.getElementById('avail-content').style.display = 'none';
-    return;
-  }
+  if (!teacherId) { document.getElementById('avail-content').style.display = 'none'; return; }
   currentAvailTeacherId = teacherId;
   document.getElementById('avail-content').style.display = 'block';
   document.getElementById('avail-reg-list').innerHTML = `<tr><td colspan="3" class="loading">載入中...</td></tr>`;
   document.getElementById('branch-checkbox-list').innerHTML = `<div class="loading">載入中...</div>`;
   document.getElementById('camp-avail-checkbox-list').innerHTML = `<div class="loading">載入中...</div>`;
-
   try {
-    // 同時載入分校設定與可上班時間
     const [branchRes, availRes] = await Promise.all([
       App.call('getTeacherBranches', { teacher_id: teacherId }),
       App.call('getAvailability', { teacher_id: teacherId })
     ]);
-
-    // 渲染分校勾選清單
-    if (branchRes.success) {
-      currentTeacherBranches = branchRes.data.map(b => b.branch);
-      renderBranchCheckboxList();
-    }
-
-    // 渲染常態班時間清單
-    if (availRes.success) {
-      renderRegularAvailList(availRes.data.regular);
-    }
-
-    // 渲染營隊時段勾選清單（從課程清單撈不重複的日期區間）
+    if (branchRes.success) { currentTeacherBranches = branchRes.data.map(b => b.branch); renderBranchCheckboxList(); }
+    if (availRes.success) renderRegularAvailList(availRes.data.regular);
     renderCampAvailCheckboxList(availRes.success ? availRes.data.camp : []);
-
-  } catch(e) {
-    showToast('載入失敗，請稍後再試');
-  }
+  } catch(e) { showToast('載入失敗，請稍後再試'); }
 }
 
-// 渲染分校勾選清單
 function renderBranchCheckboxList() {
   document.getElementById('branch-checkbox-list').innerHTML = BRANCHES.map(branch => `
-    <label style="display:flex;align-items:center;gap:10px;padding:8px 0;
-      border-bottom:1px solid var(--gray-100);cursor:pointer;font-size:14px;">
-      <input type="checkbox" value="${branch}"
-        ${currentTeacherBranches.includes(branch) ? 'checked' : ''}
-        style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary)">
+    <label style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);cursor:pointer;font-size:14px;">
+      <input type="checkbox" value="${branch}" ${currentTeacherBranches.includes(branch) ? 'checked' : ''} style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary)">
       <span>${branch}</span>
     </label>
   `).join('');
 }
 
-// 儲存講師可去的分校
 async function saveTeacherBranches() {
   if (!currentAvailTeacherId) return;
   const checkboxes = document.querySelectorAll('#branch-checkbox-list input[type="checkbox"]');
   const selected = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
   try {
-    const res = await App.call('setTeacherBranches', {
-      teacher_id: currentAvailTeacherId,
-      branches: selected
-    });
-    if (res.success) {
-      showToast('✓ 分校設定已儲存');
-      currentTeacherBranches = selected;
-    } else { showToast('儲存失敗：' + res.error); }
+    const res = await App.call('setTeacherBranches', { teacher_id: currentAvailTeacherId, branches: selected });
+    if (res.success) { showToast('✓ 分校設定已儲存'); currentTeacherBranches = selected; }
+    else { showToast('儲存失敗：' + res.error); }
   } catch(e) { showToast('儲存失敗，請稍後再試'); }
 }
 
-// 渲染常態班可上班時間清單
 function renderRegularAvailList(list) {
   const tbody = document.getElementById('avail-reg-list');
   if (!list || !list.length) {
@@ -1530,105 +1413,60 @@ function renderRegularAvailList(list) {
     <tr>
       <td>${formatWeekday(row.weekday)}</td>
       <td>${row.time_start && row.time_end ? `${row.time_start} – ${row.time_end}` : '—'}</td>
-      <td>
-        <button class="btn btn-sm btn-danger" onclick="deleteAvailability('regular', '${row.id}')">刪除</button>
-      </td>
+      <td><button class="btn btn-sm btn-danger" onclick="deleteAvailability('regular', '${row.id}')">刪除</button></td>
     </tr>
   `).join('');
 }
 
-// 渲染營隊可上班時段勾選清單
-// 從課程管理裡的營隊撈出不重複的日期區間，讓講師勾選有空的時段
 function renderCampAvailCheckboxList(existingCampList) {
   const container = document.getElementById('camp-avail-checkbox-list');
-
-  // 從所有課程中篩選出營隊，取得不重複的日期區間
   const campCourses = allCourses.filter(c => c.type === 'camp' && c.date_start && c.date_end);
-
-  // 用「開始日期~結束日期」字串去重複
   const uniqueRanges = [];
   const seen = new Set();
   campCourses.forEach(c => {
     const key = `${c.date_start}~${c.date_end}`;
-    if (!seen.has(key)) {
-      seen.add(key);
-      uniqueRanges.push({ date_start: c.date_start, date_end: c.date_end });
-    }
+    if (!seen.has(key)) { seen.add(key); uniqueRanges.push({ date_start: c.date_start, date_end: c.date_end }); }
   });
-
-  // 依開始日期排序
   uniqueRanges.sort((a, b) => a.date_start.localeCompare(b.date_start));
-
   if (!uniqueRanges.length) {
     container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🏕️</div><p>目前課程管理中沒有營隊，請先新增營隊課程</p></div>`;
     return;
   }
-
-  // 已儲存的可上班區間，用來判斷哪些要打勾
-  const existingKeys = new Set(
-    existingCampList.map(r => `${r.date_start}~${r.date_end}`)
-  );
-
+  const existingKeys = new Set(existingCampList.map(r => `${r.date_start}~${r.date_end}`));
   container.innerHTML = uniqueRanges.map(range => {
     const key = `${range.date_start}~${range.date_end}`;
     return `
-      <label style="display:flex;align-items:center;gap:10px;padding:10px 0;
-        border-bottom:1px solid var(--gray-100);cursor:pointer;font-size:14px;">
-        <input type="checkbox"
-          data-start="${range.date_start}"
-          data-end="${range.date_end}"
-          ${existingKeys.has(key) ? 'checked' : ''}
-          style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary)">
+      <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-100);cursor:pointer;font-size:14px;">
+        <input type="checkbox" data-start="${range.date_start}" data-end="${range.date_end}" ${existingKeys.has(key) ? 'checked' : ''} style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary)">
         <span>${range.date_start} ~ ${range.date_end}</span>
       </label>
     `;
   }).join('');
 }
 
-// 儲存營隊可上班時段
-// 把所有勾選的日期區間存進 CampAvailability
 async function saveCampAvailability() {
   if (!currentAvailTeacherId) return;
   const checkboxes = document.querySelectorAll('#camp-avail-checkbox-list input[type="checkbox"]');
   const checked = Array.from(checkboxes).filter(cb => cb.checked);
-
-  // 先取得目前已存的資料，把沒勾選的刪掉、新勾選的新增
   try {
     const availRes = await App.call('getAvailability', { teacher_id: currentAvailTeacherId });
     const existing = availRes.success ? availRes.data.camp : [];
-
     const existingKeys = new Set(existing.map(r => `${r.date_start}~${r.date_end}`));
     const checkedKeys = new Set(checked.map(cb => `${cb.dataset.start}~${cb.dataset.end}`));
-
-    // 刪除取消勾選的
     for (const row of existing) {
-      const key = `${row.date_start}~${row.date_end}`;
-      if (!checkedKeys.has(key)) {
+      if (!checkedKeys.has(`${row.date_start}~${row.date_end}`)) {
         await App.call('deleteAvailability', { type: 'camp', id: row.id });
       }
     }
-
-    // 新增新勾選的
     for (const cb of checked) {
-      const key = `${cb.dataset.start}~${cb.dataset.end}`;
-      if (!existingKeys.has(key)) {
-        await App.call('createAvailability', {
-          type: 'camp',
-          teacher_id: currentAvailTeacherId,
-          date_start: cb.dataset.start,
-          date_end: cb.dataset.end,
-          note: ''
-        });
+      if (!existingKeys.has(`${cb.dataset.start}~${cb.dataset.end}`)) {
+        await App.call('createAvailability', { type: 'camp', teacher_id: currentAvailTeacherId, date_start: cb.dataset.start, date_end: cb.dataset.end, note: '' });
       }
     }
-
     showToast('✓ 營隊時段已儲存');
-  } catch(e) {
-    showToast('儲存失敗，請稍後再試');
-  }
+  } catch(e) { showToast('儲存失敗，請稍後再試'); }
 }
 
-// 新增常態班可上班時間
 async function addRegularAvailability() {
   if (!currentAvailTeacherId) { showToast('請先選擇講師'); return; }
   const weekday = document.getElementById('avail-reg-weekday').value;
@@ -1637,15 +1475,8 @@ async function addRegularAvailability() {
   if (!weekday) { showToast('請選擇星期'); return; }
   if (!timeStart || !timeEnd) { showToast('請填寫開始與結束時間'); return; }
   if (timeStart >= timeEnd) { showToast('結束時間必須晚於開始時間'); return; }
-
   try {
-    const res = await App.call('createAvailability', {
-      type: 'regular',
-      teacher_id: currentAvailTeacherId,
-      weekday,
-      time_start: timeStart,
-      time_end: timeEnd
-    });
+    const res = await App.call('createAvailability', { type: 'regular', teacher_id: currentAvailTeacherId, weekday, time_start: timeStart, time_end: timeEnd });
     if (res.success) {
       showToast('✓ 已新增常態班時間');
       document.getElementById('avail-reg-weekday').value = '';
@@ -1656,25 +1487,361 @@ async function addRegularAvailability() {
   } catch(e) { showToast('新增失敗，請稍後再試'); }
 }
 
-// 刪除可上班時間（常態班）
 async function deleteAvailability(type, id) {
   if (!confirm('確定要刪除這筆時間嗎？')) return;
   try {
     const res = await App.call('deleteAvailability', { type, id });
-    if (res.success) {
-      showToast('✓ 已刪除');
-      await onAvailTeacherChange();
-    } else { showToast('刪除失敗：' + res.error); }
+    if (res.success) { showToast('✓ 已刪除'); await onAvailTeacherChange(); }
+    else { showToast('刪除失敗：' + res.error); }
   } catch(e) { showToast('刪除失敗，請稍後再試'); }
+}
+
+// ============================================================
+// ===== 排班管理 =====
+// ============================================================
+
+// 載入梯次清單
+async function loadScheduleCategories() {
+  try {
+    const res = await App.call('getCampCategories');
+    const sel = document.getElementById('schedule-category-select');
+    const current = sel.value;
+    if (res.success && res.data.length) {
+      sel.innerHTML = '<option value="">— 請選擇梯次 —</option>' +
+        res.data.map(cat => `<option value="${cat}" ${cat === current ? 'selected' : ''}>${cat}</option>`).join('');
+    } else {
+      sel.innerHTML = '<option value="">— 尚無梯次，請先在課程管理新增營隊 —</option>';
+    }
+  } catch(e) { showToast('載入梯次失敗'); }
+}
+
+// 選擇梯次後載入排班資料並渲染表格
+async function onScheduleCategoryChange() {
+  const category = document.getElementById('schedule-category-select').value;
+  if (!category) {
+    document.getElementById('schedule-table-wrap').innerHTML = '';
+    document.getElementById('schedule-summary').textContent = '';
+    document.getElementById('schedule-auto-all-btn').style.display = 'none';
+    document.getElementById('schedule-legend-card').style.display = 'none';
+    return;
+  }
+  currentScheduleCategory = category;
+  document.getElementById('schedule-table-wrap').innerHTML = `<div class="card"><div class="loading">載入排班資料中...</div></div>`;
+  document.getElementById('schedule-auto-all-btn').style.display = 'none';
+
+  try {
+    const res = await App.call('getScheduleData');
+    if (!res.success) { showToast('載入失敗：' + res.error); return; }
+    scheduleData = res.data;
+    renderScheduleTable(category);
+  } catch(e) { showToast('載入排班資料失敗'); }
+}
+
+// 渲染排班表格
+function renderScheduleTable(category) {
+  if (!scheduleData) return;
+
+  // 篩出這個梯次的營隊課程
+  const courses = scheduleData.courses.filter(c => c.type === 'camp' && c.category === category);
+  if (!courses.length) {
+    document.getElementById('schedule-table-wrap').innerHTML = `<div class="card"><div class="empty-state"><div class="empty-state-icon">📅</div><p>這個梯次沒有課程，請先到課程管理新增</p></div></div>`;
+    document.getElementById('schedule-summary').textContent = '';
+    return;
+  }
+
+  // 取出所有不重複的分校和週次
+  const branchSet = new Set();
+  const weekSet = new Set();
+  courses.forEach(c => {
+    if (c.branch) branchSet.add(c.branch);
+    if (c.date_start && c.date_end) weekSet.add(`${c.date_start}~${c.date_end}`);
+  });
+  const branches = BRANCHES.filter(b => branchSet.has(b)); // 按固定順序排
+  const weeks = Array.from(weekSet).sort();
+
+  // 摘要
+  document.getElementById('schedule-summary').textContent = `共 ${courses.length} 堂課，${branches.length} 個校區，${weeks.length} 週`;
+  document.getElementById('schedule-auto-all-btn').style.display = 'block';
+  document.getElementById('schedule-legend-card').style.display = 'block';
+
+  // 建立 sessions 的快速查詢 map：course_id -> sessions[]
+  const sessionMap = {};
+  scheduleData.sessions.forEach(s => {
+    if (!sessionMap[s.course_id]) sessionMap[s.course_id] = [];
+    sessionMap[s.course_id].push(s);
+  });
+
+  // 渲染表格
+  const thead = `
+    <thead>
+      <tr>
+        <th class="week-col">週次</th>
+        ${branches.map(b => `<th>${b}</th>`).join('')}
+      </tr>
+    </thead>
+  `;
+
+  const tbody = weeks.map((weekKey, wi) => {
+    const [dateStart, dateEnd] = weekKey.split('~');
+    const cells = branches.map(branch => {
+      const cellCourses = courses.filter(c => c.branch === branch && `${c.date_start}~${c.date_end}` === weekKey);
+      if (!cellCourses.length) return `<td><div class="schedule-cell-empty">—</div></td>`;
+      const chips = cellCourses.map(c => renderCourseChip(c, sessionMap[c.id] || [])).join('');
+      return `<td><div class="schedule-cell">${chips}</div></td>`;
+    }).join('');
+
+    return `
+      <tr>
+        <td class="week-label">
+          <div class="week-label-main">第 ${wi + 1} 週</div>
+          <div class="week-label-sub">${dateStart}</div>
+          <div class="week-label-sub">~ ${dateEnd}</div>
+        </td>
+        ${cells}
+      </tr>
+    `;
+  }).join('');
+
+  document.getElementById('schedule-table-wrap').innerHTML = `
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div class="schedule-table-wrap">
+        <table class="schedule-table">
+          ${thead}
+          <tbody>${tbody}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// 渲染單一課程 chip（包含講師/助教列）
+function renderCourseChip(course, sessions) {
+  const chipClass = getChipClass(course.skill);
+
+  // 找出這堂課的講師和助教 sessions
+  const teacherSession = sessions.find(s => s.role === 'teacher' || (!s.role && s.teacher_id));
+  const assistantSession = sessions.find(s => s.role === 'assistant');
+
+  const teacherName = teacherSession ? getTeacherName(teacherSession.teacher_id) : null;
+  const assistantName = assistantSession ? getTeacherName(assistantSession.teacher_id) : null;
+
+  // 助教是否有相關技能
+  const assistantHasSkill = assistantSession ? checkTeacherSkill(assistantSession.teacher_id, course.skill) : true;
+
+  const teacherRow = teacherName
+    ? `<div class="chip-role-row"><span class="chip-role-label">師</span><span class="chip-person">${teacherName}</span></div>`
+    : `<div class="chip-role-row"><span class="chip-role-label">師</span><button class="chip-add-btn" onclick="openRecommend('${course.id}', 'teacher')">+ 排班</button></div>`;
+
+  const assistantRow = assistantName
+    ? `<div class="chip-role-row"><span class="chip-role-label">助</span><span class="chip-person">${assistantName}</span>${!assistantHasSkill ? '<span class="no-skill-dot" title="助教無相關技能"></span>' : ''}</div>`
+    : `<div class="chip-role-row"><span class="chip-role-label">助</span><button class="chip-add-btn" onclick="openRecommend('${course.id}', 'assistant')">+ 排班</button></div>`;
+
+  return `
+    <div class="course-chip ${chipClass}">
+      <div class="chip-name">${course.name}</div>
+      <div class="chip-skill">${course.skill || ''}</div>
+      ${teacherRow}
+      ${assistantRow}
+    </div>
+  `;
+}
+
+// 檢查講師是否有某技能
+function checkTeacherSkill(teacherId, skill) {
+  if (!skill || !scheduleData) return true;
+  const skills = scheduleData.teacherSkills.filter(s => s.teacher_id === teacherId).map(s => s.course_id);
+  return skills.includes(skill);
+}
+
+// 開啟推薦彈窗
+function openRecommend(courseId, role) {
+  if (!scheduleData) return;
+  const course = scheduleData.courses.find(c => c.id === courseId);
+  if (!course) return;
+
+  currentRecommendInfo = { courseId, role };
+
+  const roleLabel = role === 'teacher' ? '推薦講師' : '推薦助教';
+  document.getElementById('recommend-modal-title').textContent = `${course.name}（${course.branch}）— ${roleLabel}`;
+
+  // 計算推薦名單
+  const candidates = getRecommendedTeachers(course, role);
+  renderRecommendList(candidates, course, role);
+  openModal('recommend-modal');
+}
+
+// 計算推薦名單
+function getRecommendedTeachers(course, role) {
+  if (!scheduleData) return [];
+
+  const allT = scheduleData.teachers.filter(t => t.status === 'active');
+  const results = [];
+
+  // 找出這個週次已被排班的講師（同週不能去兩個分校）
+  const weekKey = `${course.date_start}~${course.date_end}`;
+  const busyTeacherIds = new Set();
+  scheduleData.sessions.forEach(s => {
+    const c = scheduleData.courses.find(c => c.id === s.course_id);
+    if (c && `${c.date_start}~${c.date_end}` === weekKey && c.id !== course.id) {
+      busyTeacherIds.add(s.teacher_id);
+    }
+  });
+
+  allT.forEach(t => {
+    // 衝突檢查：這週已被排到其他分校
+    if (busyTeacherIds.has(t.id)) return;
+
+    // 分校符合檢查
+    const teacherBranches = scheduleData.teacherBranches
+      .filter(b => b.teacher_id === t.id)
+      .map(b => b.branch);
+    const branchOk = teacherBranches.includes(course.branch);
+
+    // 時間符合檢查
+    const campAvail = scheduleData.campAvailability.filter(a => a.teacher_id === t.id);
+    const timeOk = campAvail.some(a => a.date_start === course.date_start && a.date_end === course.date_end);
+
+    // 技能符合檢查
+    const teacherSkills = scheduleData.teacherSkills
+      .filter(s => s.teacher_id === t.id)
+      .map(s => s.course_id);
+    const skillOk = course.skill ? teacherSkills.includes(course.skill) : false;
+
+    if (role === 'teacher') {
+      // 講師：三個條件都要符合
+      if (branchOk && timeOk && skillOk) {
+        results.push({ teacher: t, branchOk, timeOk, skillOk });
+      }
+    } else {
+      // 助教：分校 + 時間必須符合，技能不是必要
+      if (branchOk && timeOk) {
+        results.push({ teacher: t, branchOk, timeOk, skillOk });
+      }
+    }
+  });
+
+  // 排序：技能符合的優先
+  results.sort((a, b) => (b.skillOk ? 1 : 0) - (a.skillOk ? 1 : 0));
+  return results;
+}
+
+// 渲染推薦名單
+function renderRecommendList(candidates, course, role) {
+  const body = document.getElementById('recommend-modal-body');
+
+  if (!candidates.length) {
+    const msg = role === 'teacher'
+      ? '沒有同時符合技能、分校、時間三個條件的講師。<br>請確認講師有設定技能、可去分校和營隊可上班時段。'
+      : '沒有符合分校和時間條件的助教。<br>請確認講師有設定可去分校和營隊可上班時段。';
+    body.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🔍</div><p style="text-align:center">${msg}</p></div>`;
+    return;
+  }
+
+  const roleLabel = role === 'teacher' ? '指派為講師' : '指派為助教';
+
+  body.innerHTML = `
+    <p style="font-size:12px;color:var(--gray-600);margin-bottom:12px">
+      ${role === 'teacher' ? '以下講師符合技能、分校、時間三個條件：' : '以下人員符合分校和時間條件（技能不符合會標示）：'}
+    </p>
+    ${candidates.map(({ teacher: t, branchOk, timeOk, skillOk }) => `
+      <div class="recommend-item">
+        <div class="recommend-avatar">${t.name.charAt(0)}</div>
+        <div style="flex:1;min-width:0">
+          <div class="recommend-name">${t.name}</div>
+          <div class="recommend-tags">
+            ${skillOk ? '<span class="tag-ok">技能符合</span>' : '<span class="tag-warn">無相關技能</span>'}
+            ${branchOk ? '<span class="tag-ok">分校符合</span>' : ''}
+            ${timeOk ? '<span class="tag-ok">時間有空</span>' : ''}
+          </div>
+        </div>
+        <div class="recommend-actions">
+          <button class="btn btn-sm btn-success" onclick="assignTeacher('${course.id}', '${t.id}', '${role}')">${roleLabel}</button>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+// 指派講師/助教，寫入 Sessions
+async function assignTeacher(courseId, teacherId, role) {
+  const course = scheduleData.courses.find(c => c.id === courseId);
+  if (!course) return;
+
+  try {
+    const payload = {
+      type: 'camp',
+      course_id: courseId,
+      teacher_id: teacherId,
+      role: role,
+      date: course.date_start || '',
+      time_start: '',
+      time_end: '',
+      status: 'planned',
+      note: role === 'assistant' ? '助教' : '講師'
+    };
+    const res = await App.call('createSession', payload);
+    if (res.success) {
+      showToast(`✓ 已指派 ${getTeacherName(teacherId)} 為${role === 'teacher' ? '講師' : '助教'}`);
+      closeModal('recommend-modal');
+      // 重新載入排班資料更新表格
+      const dataRes = await App.call('getScheduleData');
+      if (dataRes.success) {
+        scheduleData = dataRes.data;
+        renderScheduleTable(currentScheduleCategory);
+      }
+    } else { showToast('指派失敗：' + res.error); }
+  } catch(e) { showToast('指派失敗，請稍後再試'); }
+}
+
+// 全部自動排班（幫所有還沒有講師的格子自動選第一位推薦人選）
+async function autoScheduleAll() {
+  if (!scheduleData || !currentScheduleCategory) return;
+  if (!confirm('確定要自動排班所有空缺嗎？系統會為每堂課選擇第一位推薦人選。')) return;
+
+  const courses = scheduleData.courses.filter(c => c.type === 'camp' && c.category === currentScheduleCategory);
+  let assigned = 0;
+
+  for (const course of courses) {
+    const sessions = scheduleData.sessions.filter(s => s.course_id === course.id);
+    const hasTeacher = sessions.some(s => s.role === 'teacher' || (!s.role && s.teacher_id));
+    const hasAssistant = sessions.some(s => s.role === 'assistant');
+
+    if (!hasTeacher) {
+      const candidates = getRecommendedTeachers(course, 'teacher');
+      if (candidates.length) {
+        await App.call('createSession', {
+          type: 'camp', course_id: course.id,
+          teacher_id: candidates[0].teacher.id,
+          role: 'teacher', date: course.date_start || '',
+          time_start: '', time_end: '', status: 'planned', note: '講師'
+        });
+        assigned++;
+      }
+    }
+    if (!hasAssistant) {
+      const candidates = getRecommendedTeachers(course, 'assistant');
+      if (candidates.length) {
+        await App.call('createSession', {
+          type: 'camp', course_id: course.id,
+          teacher_id: candidates[0].teacher.id,
+          role: 'assistant', date: course.date_start || '',
+          time_start: '', time_end: '', status: 'planned', note: '助教'
+        });
+        assigned++;
+      }
+    }
+  }
+
+  showToast(`✓ 自動排班完成，共指派 ${assigned} 個職位`);
+  const dataRes = await App.call('getScheduleData');
+  if (dataRes.success) { scheduleData = dataRes.data; renderScheduleTable(currentScheduleCategory); }
 }
 
 // ============================================================
 // 初始化
 // ============================================================
 (async function init() {
-  // 同時載入講師與課程資料
   await Promise.all([loadTeachers(), loadCourses()]);
-  // 講師資料載入後填入可上班時間頁面的講師下拉選單
   populateAvailTeacherSelect();
 })();
 </script>
