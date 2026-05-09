@@ -1,4 +1,3 @@
-// 試算表 ID
 const SPREADSHEET_ID = '1iNtYBr9IA4KG36bPg9NDGXgI7bmTS_fDQbWAaCy-dlA';
 
 const SHEET_NAMES = {
@@ -22,7 +21,16 @@ function getAllRows(sheetName) {
   const headers = data[0];
   return data.slice(1).map(row => {
     const obj = {};
-    headers.forEach((header, i) => obj[header] = row[i]);
+    headers.forEach((header, i) => {
+      const val = row[i];
+      if (val instanceof Date && val.getFullYear() === 1899) {
+        const hh = String(val.getHours()).padStart(2, '0');
+        const mm = String(val.getMinutes()).padStart(2, '0');
+        obj[header] = `${hh}:${mm}`;
+      } else {
+        obj[header] = val;
+      }
+    });
     return obj;
   });
 }
@@ -52,8 +60,21 @@ function updateRowById(sheetName, id, newData) {
   return false;
 }
 
+function deleteRowById(sheetName, id) {
+  const sheet = getSheet(sheetName);
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+  const idIndex = headers.indexOf('id');
+  for (let i = data.length - 1; i >= 1; i--) {
+    if (data[i][idIndex] === id) {
+      sheet.deleteRow(i + 1);
+      return true;
+    }
+  }
+  return false;
+}
+
 // --- Teachers ---
-// 欄位順序：id, name, id_number, email, phone, birthday, address, bank_code, bank_account, status, note, created_at
 
 function getTeachers() {
   return getAllRows(SHEET_NAMES.TEACHERS);
@@ -83,7 +104,7 @@ function updateTeacher(payload) {
 }
 
 // --- Courses ---
-// 欄位順序：id, type, name, weekday, time_start, time_end, date_start, date_end, status, created_at
+// 欄位順序：id, type, name, category, branch, skill, weekday, time_start, time_end, date_start, date_end, status, created_at
 
 function getCourses() {
   return getAllRows(SHEET_NAMES.COURSES);
@@ -94,10 +115,12 @@ function createCourse(payload) {
     id: generateUUID(),
     type: payload.type || 'regular',
     name: payload.name || '',
+    category: payload.category || '',
     branch: payload.branch || '',
+    skill: payload.skill || '',
     weekday: payload.weekday !== undefined ? payload.weekday : '',
-    time_start: payload.time_start || '',
-    time_end: payload.time_end || '',
+    time_start: payload.type === 'regular' ? (payload.time_start || '') : '',
+    time_end: payload.type === 'regular' ? (payload.time_end || '') : '',
     date_start: payload.date_start || '',
     date_end: payload.date_end || '',
     status: 'active',
@@ -136,6 +159,38 @@ function setTeacherSkills(payload) {
         note: payload.note || ''
       });
     }
+  });
+  return true;
+}
+
+// --- TeacherBranches ---
+
+function getTeacherBranches(payload) {
+  const all = getAllRows(SHEET_NAMES.TEACHER_BRANCHES);
+  if (payload && payload.teacher_id) {
+    return all.filter(row => row.teacher_id === payload.teacher_id);
+  }
+  return all;
+}
+
+function setTeacherBranches(payload) {
+  const teacherId = payload.teacher_id;
+  const branches = payload.branches || [];
+  const sheet = getSheet(SHEET_NAMES.TEACHER_BRANCHES);
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+  const teacherIdIndex = headers.indexOf('teacher_id');
+  for (let i = data.length - 1; i >= 1; i--) {
+    if (data[i][teacherIdIndex] === teacherId) {
+      sheet.deleteRow(i + 1);
+    }
+  }
+  branches.forEach(branch => {
+    appendRow(SHEET_NAMES.TEACHER_BRANCHES, {
+      id: generateUUID(),
+      teacher_id: teacherId,
+      branch: branch
+    });
   });
   return true;
 }
@@ -179,6 +234,15 @@ function createAvailability(payload) {
   return null;
 }
 
+function deleteAvailability(payload) {
+  if (payload.type === 'regular') {
+    return deleteRowById(SHEET_NAMES.REGULAR_AVAILABILITY, payload.id);
+  } else if (payload.type === 'camp') {
+    return deleteRowById(SHEET_NAMES.CAMP_AVAILABILITY, payload.id);
+  }
+  return false;
+}
+
 // --- Sessions ---
 
 function getSessions() {
@@ -194,7 +258,7 @@ function createSession(payload) {
     date: payload.date || '',
     time_start: payload.time_start || '',
     time_end: payload.time_end || '',
-    status: 'planned',
+    status: payload.status || 'planned',
     note: payload.note || ''
   };
   appendRow(SHEET_NAMES.SESSIONS, row);
@@ -205,68 +269,25 @@ function updateSession(payload) {
   return updateRowById(SHEET_NAMES.SESSIONS, payload.id, payload);
 }
 
-// 刪除指定工作表中符合 id 的那一行
-function deleteRowById(sheetName, id) {
-  const sheet = getSheet(sheetName);
-  const data = sheet.getDataRange().getValues();
-  const headers = data[0];
-  const idIndex = headers.indexOf('id');
-  // 從最後一行往上找，避免刪除後行號錯位
-  for (let i = data.length - 1; i >= 1; i--) {
-    if (data[i][idIndex] === id) {
-      sheet.deleteRow(i + 1);
-      return true;
-    }
-  }
-  return false;
+// ✅ 新增：排班用 — 一次取得所有排班需要的資料
+function getScheduleData() {
+  return {
+    courses: getAllRows(SHEET_NAMES.COURSES),
+    teachers: getAllRows(SHEET_NAMES.TEACHERS),
+    teacherSkills: getAllRows(SHEET_NAMES.TEACHER_SKILLS),
+    teacherBranches: getAllRows(SHEET_NAMES.TEACHER_BRANCHES),
+    campAvailability: getAllRows(SHEET_NAMES.CAMP_AVAILABILITY),
+    sessions: getAllRows(SHEET_NAMES.SESSIONS)
+  };
 }
 
-// 刪除可上班時間（type 為 'regular' 或 'camp'）
-function deleteAvailability(payload) {
-  if (payload.type === 'regular') {
-    return deleteRowById(SHEET_NAMES.REGULAR_AVAILABILITY, payload.id);
-  } else if (payload.type === 'camp') {
-    return deleteRowById(SHEET_NAMES.CAMP_AVAILABILITY, payload.id);
-  }
-  return false;
-}
-
-// ============================================================
-// 分校相關（TeacherBranches 工作表）
-// ============================================================
-
-// 取得講師可去的分校清單
-function getTeacherBranches(payload) {
-  const all = getAllRows(SHEET_NAMES.TEACHER_BRANCHES);
-  if (payload && payload.teacher_id) {
-    return all.filter(row => row.teacher_id === payload.teacher_id);
-  }
-  return all;
-}
-
-// 儲存講師可去的分校（先刪除舊資料再重新寫入）
-function setTeacherBranches(payload) {
-  const teacherId = payload.teacher_id;
-  const branches = payload.branches || [];
-  const sheet = getSheet(SHEET_NAMES.TEACHER_BRANCHES);
-  const data = sheet.getDataRange().getValues();
-  const headers = data[0];
-  const teacherIdIndex = headers.indexOf('teacher_id');
-
-  // 從最後一行往上刪，避免刪除後行號錯位
-  for (let i = data.length - 1; i >= 1; i--) {
-    if (data[i][teacherIdIndex] === teacherId) {
-      sheet.deleteRow(i + 1);
-    }
-  }
-
-  // 重新寫入勾選的分校
-  branches.forEach(branch => {
-    appendRow(SHEET_NAMES.TEACHER_BRANCHES, {
-      id: generateUUID(),
-      teacher_id: teacherId,
-      branch: branch
-    });
-  });
-  return true;
+// ✅ 新增：取得所有營隊梯次清單（不重複的 category 值）
+function getCampCategories() {
+  const courses = getAllRows(SHEET_NAMES.COURSES);
+  const categories = [...new Set(
+    courses
+      .filter(c => c.type === 'camp' && c.category)
+      .map(c => c.category)
+  )];
+  return categories;
 }

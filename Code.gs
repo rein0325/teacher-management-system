@@ -89,6 +89,10 @@ function doPost(e) {
         return successResponse(createSession(payload));
       case 'updateSession':
         return successResponse(updateSession(payload));
+      case 'getScheduleData':
+        return successResponse(getScheduleData());
+      case 'getCampCategories':
+        return successResponse(getCampCategories());
 
       // 找不到對應的 action
       default:
@@ -129,6 +133,12 @@ function doGet(e) {
         case 'getSessions':      result = successData(getSessions()); break;
         case 'createSession':    result = successData(createSession(payload)); break;
         case 'updateSession':    result = successData(updateSession(payload)); break;
+        case 'getScheduleData':  result = successData(getScheduleData()); break;
+        case 'getCampCategories': result = successData(getCampCategories()); break;
+        case 'updateCourse':       result = successData(updateCourse(payload)); break;
+        case 'getTeacherBranches': result = successData(getTeacherBranches(payload)); break;
+        case 'setTeacherBranches': result = successData(setTeacherBranches(payload)); break;
+        case 'deleteAvailability': result = successData(deleteAvailability(payload)); break;
         default: result = { success: false, error: '未知的 action：' + action };
       }
 
