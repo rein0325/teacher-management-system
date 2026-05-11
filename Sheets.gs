@@ -22,14 +22,22 @@ function getAllRows(sheetName) {
   return data.slice(1).map(row => {
     const obj = {};
     headers.forEach((header, i) => {
-      const val = row[i];
-      if (val instanceof Date && val.getFullYear() === 1899) {
-        const hh = String(val.getHours()).padStart(2, '0');
-        const mm = String(val.getMinutes()).padStart(2, '0');
-        obj[header] = `${hh}:${mm}`;
-      } else {
-        obj[header] = val;
+      let val = row[i];
+      if (val instanceof Date) {
+        if (val.getFullYear() === 1899) {
+          // Sheets 純時間格式 → HH:mm
+          const hh = String(val.getHours()).padStart(2, '0');
+          const mm = String(val.getMinutes()).padStart(2, '0');
+          val = `${hh}:${mm}`;
+        } else {
+          // 正常日期 → YYYY-MM-DD
+          const yyyy = val.getFullYear();
+          const mo = String(val.getMonth() + 1).padStart(2, '0');
+          const dd = String(val.getDate()).padStart(2, '0');
+          val = `${yyyy}-${mo}-${dd}`;
+        }
       }
+      obj[header] = val;
     });
     return obj;
   });

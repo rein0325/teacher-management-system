@@ -10,23 +10,23 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --primary: #1a73e8;
-    --primary-hover: #1557b0;
-    --danger: #d93025;
-    --success: #188038;
-    --warning: #f29900;
-    --gray-50: #f8f9fa;
-    --gray-100: #f1f3f4;
-    --gray-200: #e8eaed;
-    --gray-400: #bdc1c6;
-    --gray-600: #80868b;
-    --gray-800: #3c4043;
-    --gray-900: #202124;
-    --border: #dadce0;
-    --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
-    --shadow-lg: 0 4px 12px rgba(0,0,0,0.15);
-    --radius: 8px;
-  }
+  --primary: #e6a800;
+  --primary-hover: #cc9400;
+  --danger: #d93025;
+  --success: #188038;
+  --warning: #f29900;
+  --gray-50: #f8f9fa;
+  --gray-100: #f1f3f4;
+  --gray-200: #e8eaed;
+  --gray-400: #bdc1c6;
+  --gray-600: #80868b;
+  --gray-800: #3c4043;
+  --gray-900: #202124;
+  --border: #dadce0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.15);
+  --radius: 8px;
+}
 
   body {
     font-family: 'Noto Sans TC', sans-serif;
@@ -37,7 +37,7 @@
   }
 
   .topbar {
-    background: #fff;
+    background: #fffbef;
     border-bottom: 1px solid var(--border);
     padding: 0 24px;
     display: flex;
@@ -68,7 +68,7 @@
     white-space: nowrap;
   }
   .nav-btn:hover { background: var(--gray-100); }
-  .nav-btn.active { background: #e8f0fe; color: var(--primary); font-weight: 500; }
+  .nav-btn.active { background: #fff3c4; color: var(--primary); font-weight: 500; }
 
   .main { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
 
@@ -153,7 +153,7 @@
     color: var(--gray-800); transition: all 0.15s;
   }
   .filter-chip:hover { border-color: var(--primary); color: var(--primary); }
-  .filter-chip.active { background: #e8f0fe; border-color: var(--primary); color: var(--primary); font-weight: 500; }
+  .filter-chip.active { background: #fff3c4; border-color: var(--primary); color: var(--primary); font-weight: 500; }
 
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; }
@@ -501,7 +501,7 @@
         </div>
         <div class="form-group">
           <label>開始時間</label>
-          <input type="time" id="c-time-start">
+          <input type="time" id="c-time-start" onchange="onRegularTimeStartChange()">
         </div>
         <div class="form-group">
           <label>結束時間</label>
@@ -513,7 +513,7 @@
       <div class="form-row course-type-fields" id="camp-fields">
         <div class="form-group">
           <label>開始日期</label>
-          <input type="date" id="c-date-start">
+          <input type="date" id="c-date-start" onchange="onCampDateStartChange()">
         </div>
         <div class="form-group">
           <label>結束日期</label>
@@ -528,18 +528,28 @@
 
     <div class="card">
       <div class="card-title">課程清單</div>
-      <div class="filter-bar">
-        <span class="filter-label">篩選：</span>
-        <button class="filter-chip active" onclick="filterCourses('all', this)">全部</button>
-        <button class="filter-chip" onclick="filterCourses('regular', this)">常態班</button>
-        <button class="filter-chip" onclick="filterCourses('camp', this)">營隊</button>
-        <button class="filter-chip" onclick="filterCourses('active', this)">上課中</button>
-        <button class="filter-chip" onclick="filterCourses('inactive', this)">已結束</button>
-        <button class="filter-chip" onclick="filterCourses('延壽校', this)">延壽校</button>
-        <button class="filter-chip" onclick="filterCourses('安和校', this)">安和校</button>
-        <button class="filter-chip" onclick="filterCourses('大直校', this)">大直校</button>
-        <button class="filter-chip" onclick="filterCourses('板橋校', this)">板橋校</button>
-        <button class="filter-chip" onclick="filterCourses('重慶校', this)">重慶校</button>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <span style="font-size:12px;color:var(--gray-600);width:36px;flex-shrink:0;">狀態</span>
+          <button class="filter-chip active" onclick="setCourseFilter('status','all',this)">全部</button>
+          <button class="filter-chip" onclick="setCourseFilter('status','active',this)">上課中</button>
+          <button class="filter-chip" onclick="setCourseFilter('status','inactive',this)">已結束</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <span style="font-size:12px;color:var(--gray-600);width:36px;flex-shrink:0;">類型</span>
+          <button class="filter-chip active" onclick="setCourseFilter('type','all',this)">全部</button>
+          <button class="filter-chip" onclick="setCourseFilter('type','regular',this)">常態班</button>
+          <button class="filter-chip" onclick="setCourseFilter('type','camp',this)">營隊</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <span style="font-size:12px;color:var(--gray-600);width:36px;flex-shrink:0;">分校</span>
+          <button class="filter-chip active" onclick="setCourseFilter('branch','all',this)">全部</button>
+          <button class="filter-chip" onclick="setCourseFilter('branch','延壽校',this)">延壽校</button>
+          <button class="filter-chip" onclick="setCourseFilter('branch','安和校',this)">安和校</button>
+          <button class="filter-chip" onclick="setCourseFilter('branch','大直校',this)">大直校</button>
+          <button class="filter-chip" onclick="setCourseFilter('branch','板橋校',this)">板橋校</button>
+          <button class="filter-chip" onclick="setCourseFilter('branch','重慶校',this)">重慶校</button>
+        </div>
       </div>
       <div class="table-wrap">
         <table>
@@ -746,7 +756,7 @@ const WEEKDAY_MAP = { '0':'週日','1':'週一','2':'週二','3':'週三','4':'�
 let allTeachers = [];
 let allCourses = [];
 let teacherFilter = 'all';
-let courseFilter = 'all';
+let courseFilter = { status: 'all', type: 'all', branch: 'all' };
 let currentEditTeacher = null;
 let currentEditCourse = null;
 let scheduleData = null;       // 排班用的完整資料
@@ -833,6 +843,26 @@ function onCourseTypeChange() {
   const type = document.getElementById('c-type').value;
   document.getElementById('regular-fields').classList.toggle('show', type === 'regular');
   document.getElementById('camp-fields').classList.toggle('show', type === 'camp');
+}
+
+function onRegularTimeStartChange() {
+  const start = document.getElementById('c-time-start').value;
+  if (!start) return;
+  const [h, m] = start.split(':').map(Number);
+  const endH = String((h + 2) % 24).padStart(2, '0');
+  const endM = String(m).padStart(2, '0');
+  document.getElementById('c-time-end').value = `${endH}:${endM}`;
+}
+
+function onCampDateStartChange() {
+  const start = document.getElementById('c-date-start').value;
+  if (!start) return;
+  const d = new Date(start);
+  d.setDate(d.getDate() + 4);
+  const yyyy = d.getFullYear();
+  const mo   = String(d.getMonth() + 1).padStart(2, '0');
+  const dd   = String(d.getDate()).padStart(2, '0');
+  document.getElementById('c-date-end').value = `${yyyy}-${mo}-${dd}`;
 }
 
 // ============================================================
@@ -1132,11 +1162,9 @@ async function loadCourses() {
 function renderCourseList() {
   const tbody = document.getElementById('course-list');
   let data = allCourses;
-  if (courseFilter === 'regular') data = data.filter(c => c.type === 'regular');
-  else if (courseFilter === 'camp') data = data.filter(c => c.type === 'camp');
-  else if (courseFilter === 'active') data = data.filter(c => c.status === 'active');
-  else if (courseFilter === 'inactive') data = data.filter(c => c.status === 'inactive');
-  else if (courseFilter !== 'all') data = data.filter(c => c.branch === courseFilter);
+  if (courseFilter.status !== 'all') data = data.filter(c => c.status === courseFilter.status);
+  if (courseFilter.type   !== 'all') data = data.filter(c => c.type   === courseFilter.type);
+  if (courseFilter.branch !== 'all') data = data.filter(c => c.branch === courseFilter.branch);
 
   if (!data.length) {
     tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-state-icon">📚</div><p>尚無課程資料</p></div></td></tr>`;
@@ -1172,9 +1200,9 @@ function renderCourseList() {
   }).join('');
 }
 
-function filterCourses(val, el) {
-  courseFilter = val;
-  document.querySelectorAll('#page-courses .filter-chip').forEach(c => c.classList.remove('active'));
+function setCourseFilter(dim, val, el) {
+  courseFilter[dim] = val;
+  el.closest('div').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
   renderCourseList();
 }
@@ -1385,10 +1413,10 @@ async function onAvailTeacherChange() {
 }
 
 function renderBranchCheckboxList() {
-  document.getElementById('branch-checkbox-list').innerHTML = BRANCHES.map(branch => `
-    <label style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);cursor:pointer;font-size:14px;">
-      <input type="checkbox" value="${branch}" ${currentTeacherBranches.includes(branch) ? 'checked' : ''} style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary)">
-      <span>${branch}</span>
+  document.getElementById('branch-checkbox-list').innerHTML = BRANCHES.map(b => `
+    <label style="display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;font-size:13px;">
+      <input type="checkbox" value="${b}" ${currentTeacherBranches.includes(b) ? 'checked' : ''}>
+      ${b}
     </label>
   `).join('');
 }
