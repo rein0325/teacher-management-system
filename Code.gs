@@ -87,6 +87,8 @@ function doPost(e) {
         return successResponse(getSessions());
       case 'createSession':
         return successResponse(createSession(payload));
+      case 'deleteSession':
+        result = deleteRowById(SHEET_NAMES.SESSIONS, payload.id);
       case 'updateSession':
         return successResponse(updateSession(payload));
       case 'getScheduleData':
@@ -139,6 +141,7 @@ function doGet(e) {
         case 'getTeacherBranches': result = successData(getTeacherBranches(payload)); break;
         case 'setTeacherBranches': result = successData(setTeacherBranches(payload)); break;
         case 'deleteAvailability': result = successData(deleteAvailability(payload)); break;
+        case 'deleteSession': result = deleteRowById(SHEET_NAMES.SESSIONS, payload.id); break;
         default: result = { success: false, error: '未知的 action：' + action };
       }
 

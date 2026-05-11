@@ -31,9 +31,9 @@ function getAllRows(sheetName) {
           val = `${hh}:${mm}`;
         } else {
           // 正常日期 → YYYY-MM-DD
-          const yyyy = val.getFullYear();
-          const mo = String(val.getMonth() + 1).padStart(2, '0');
-          const dd = String(val.getDate()).padStart(2, '0');
+          const yyyy = val.getUTCFullYear();
+          const mo = String(val.getUTCMonth() + 1).padStart(2, '0');
+          const dd = String(val.getUTCDate()).padStart(2, '0');
           val = `${yyyy}-${mo}-${dd}`;
         }
       }

@@ -311,6 +311,26 @@
     display: flex; align-items: center; gap: 10px;
     padding: 10px 0; border-bottom: 1px solid var(--gray-100);
   }
+  .chip-change-btn {
+    padding: 1px 6px;
+    font-size: 10px;
+    border: 1px solid var(--primary);
+    border-radius: 3px;
+    background: #fff;
+    color: var(--primary);
+    cursor: pointer;
+    margin-left: 4px;
+  }
+  .chip-remove-btn {
+    padding: 1px 5px;
+    font-size: 10px;
+    border: 1px solid var(--danger);
+    border-radius: 3px;
+    background: #fff;
+    color: var(--danger);
+    cursor: pointer;
+    margin-left: 2px;
+  }
   .recommend-item:last-child { border-bottom: none; }
   .recommend-avatar {
     width: 32px; height: 32px; border-radius: 50%;
@@ -1658,12 +1678,23 @@ function renderCourseChip(course, sessions) {
   const assistantHasSkill = assistantSession ? checkTeacherSkill(assistantSession.teacher_id, course.skill) : true;
 
   const teacherRow = teacherName
-    ? `<div class="chip-role-row"><span class="chip-role-label">師</span><span class="chip-person">${teacherName}</span></div>`
-    : `<div class="chip-role-row"><span class="chip-role-label">師</span><button class="chip-add-btn" onclick="openRecommend('${course.id}', 'teacher')">+ 排班</button></div>`;
+  ? `<div class="chip-role-row">
+       <span class="chip-role-label">師</span>
+       <span class="chip-person">${teacherName}</span>
+       <button class="chip-change-btn" onclick="openRecommend('${course.id}', 'teacher')">換</button>
+       <button class="chip-remove-btn" onclick="removeSession('${teacherSession.id}')">✕</button>
+     </div>`
+  : `<div class="chip-role-row"><span class="chip-role-label">師</span><button class="chip-add-btn" onclick="openRecommend('${course.id}', 'teacher')">+ 排班</button></div>`;
 
-  const assistantRow = assistantName
-    ? `<div class="chip-role-row"><span class="chip-role-label">助</span><span class="chip-person">${assistantName}</span>${!assistantHasSkill ? '<span class="no-skill-dot" title="助教無相關技能"></span>' : ''}</div>`
-    : `<div class="chip-role-row"><span class="chip-role-label">助</span><button class="chip-add-btn" onclick="openRecommend('${course.id}', 'assistant')">+ 排班</button></div>`;
+const assistantRow = assistantName
+  ? `<div class="chip-role-row">
+       <span class="chip-role-label">助</span>
+       <span class="chip-person">${assistantName}</span>
+       ${!assistantHasSkill ? '<span class="no-skill-dot" title="助教無相關技能"></span>' : ''}
+       <button class="chip-change-btn" onclick="openRecommend('${course.id}', 'assistant')">換</button>
+       <button class="chip-remove-btn" onclick="removeSession('${assistantSession.id}')">✕</button>
+     </div>`
+  : `<div class="chip-role-row"><span class="chip-role-label">助</span><button class="chip-add-btn" onclick="openRecommend('${course.id}', 'assistant')">+ 排班</button></div>`;
 
   return `
     <div class="course-chip ${chipClass}">
@@ -1820,6 +1851,21 @@ async function assignTeacher(courseId, teacherId, role) {
       }
     } else { showToast('指派失敗：' + res.error); }
   } catch(e) { showToast('指派失敗，請稍後再試'); }
+}
+
+async function removeSession(sessionId) {
+  if (!confirm('確定要取消這個指派嗎？')) return;
+  try {
+    const res = await App.call('deleteSession', { id: sessionId });
+    if (res.success) {
+      showToast('✓ 已取消指派');
+      const dataRes = await App.call('getScheduleData');
+      if (dataRes.success) {
+        scheduleData = dataRes.data;
+        renderScheduleTable(currentScheduleCategory);
+      }
+    } else { showToast('取消失敗：' + res.error); }
+  } catch(e) { showToast('取消失敗，請稍後再試'); }
 }
 
 // 全部自動排班（幫所有還沒有講師的格子自動選第一位推薦人選）
